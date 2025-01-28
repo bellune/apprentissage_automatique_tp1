@@ -1,0 +1,4 @@
+Alice     30 Paris
+Bob       25 Londres
+Charlie   35 New York
+Diane     28 Berlin

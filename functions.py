@@ -5,10 +5,11 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from itertools import combinations
 import re
+from datetime import datetime
 
 
 def calculate_following_followers_ratio(following, followers ):
-    return following / (followers + 1)  # Éviter la division par zéro
+    return round(following / (followers + 1), 3)  # Éviter la division par zéro
 
 #Calcul de la proportion de @, #, http  
 def calculate_proportion(feature, symbol, df):
@@ -34,7 +35,26 @@ def calculate_time_between_tweets(df):
     return df.groupby("nom_utilisateur")["temps_entre_tweets"].agg(["mean", "max"])
 
 #Calcule le nombre moyen de tweets par jour."""
-def calculer_tweets_par_jour(nombre_tweets, duree_vie_compte):
+def calculer_tweets_par_jour(nombre_tweets, date_creation):
+    duree_vie_compte = calculer_duree_compte(date_creation)
     return nombre_tweets / duree_vie_compte if duree_vie_compte > 0 else 0
 
 
+
+#Calcule la durée d'existence d'un compte Twitter.
+# Retourne le nombre de jours depuis la création du compte
+def calculer_duree_compte(created_at):
+
+    if pd.isna(created_at):
+        return 0  # Si la date est manquante, retourner 0
+
+    # Vérifier si la date est déjà un objet datetime
+    if isinstance(created_at, str):
+        try:
+            created_at = pd.to_datetime(created_at, errors='coerce')  # Convertir la chaîne en datetime
+        except Exception:
+            return 0  # Retourner 0 en cas d'erreur
+
+    # Calcul du nombre de jours
+    jours_ecoules = (pd.Timestamp.now() - created_at).days
+    return max(jours_ecoules, 1)  # Retourner au moins 1 pour éviter la division par 0

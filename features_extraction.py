@@ -54,5 +54,5 @@ def txt_to_excel_with_selected_columns(txt_file_path, excel_file_path):
 
 # Exemple d'utilisation
 txt_file_path = "Datasets/content_polluters.txt"  # Fichier texte avec vos données
-excel_file_path = "Pretraitement/clean_data_selected.xlsx"  # Fichier Excel à créer
+excel_file_path = "Pretraitement/clean_data_selected.csv"  # Fichier Excel à créer
 txt_to_excel_with_selected_columns(txt_file_path, excel_file_path)

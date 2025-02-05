@@ -14,7 +14,7 @@ def calculate_proportion(feature, symbol, df):
         words = [word for word in words if not re.match(r"[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}", word)]  # Exclure les emails
         return sum(1 for word in words if symbol in word) / len(words) if words else 0
     
-    return df["feature"].apply(lambda x: count_symbol_excluding_emails(x, symbol))
+    return df[feature].apply(lambda x: count_symbol_excluding_emails(x, symbol))
 
 def calculate_tweet_similarity(tweets):
     if len(tweets) < 2:

@@ -5,8 +5,11 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from itertools import combinations
 import re
+
+
 def calculate_following_followers_ratio(following, followers ):
     return following / (followers + 1)  # Éviter la division par zéro
+
 #Calcul de la proportion de @, #, http  
 def calculate_proportion(feature, symbol, df):
     def count_symbol_excluding_emails(text, symbol):

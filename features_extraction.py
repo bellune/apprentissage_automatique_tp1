@@ -1,5 +1,5 @@
 import pandas as pd
-
+import functions as fs
 # Fonction pour extraire des colonnes spécifiques et exporter en Excel
 def txt_to_excel_with_selected_columns(txt_file_path, excel_file_path):
     """
@@ -40,6 +40,18 @@ def txt_to_excel_with_selected_columns(txt_file_path, excel_file_path):
         # Convertir en DataFrame avec les noms des colonnes sélectionnées
         df = pd.DataFrame(cleaned_data, columns=column_names)
 
+        df["rapport_following_followers"] = fs.calculate_following_followers_ratio(df)
+        df["proportion_url"] = fs.calculate_proportion("tweets", "http", df)
+        df["proportion_mentions"] = fs.calculate_proportion("tweets", "@", df)
+        df["proportion_hashtags"] = fs.calculate_proportion("tweets", "#", df)
+        df["tweets_par_jour"] = fs.calculate_tweets_per_day(df)
+        df["similarite_moyenne_tweets"] = df.groupby("nom_utilisateur")["tweets"].transform(fs.calculate_tweet_similarity)
+        df["nombre_tweets_repetitifs"] = fs.calculate_repetitive_tweets(df)
+        time_stats = fs.calculate_time_between_tweets(df)
+        df["temps_moyen_entre_tweets"] = time_stats["mean"]
+        df["temps_max_entre_tweets"] = time_stats["max"]
+
+
         # Exporter au format Excel
         df.to_excel(excel_file_path, index=False)
         print(f"Les données ont été exportées avec succès vers {excel_file_path}.")
@@ -54,5 +66,5 @@ def txt_to_excel_with_selected_columns(txt_file_path, excel_file_path):
 
 # Exemple d'utilisation
 txt_file_path = "Datasets/content_polluters.txt"  # Fichier texte avec vos données
-excel_file_path = "Pretraitement/clean_data_selected.csv"  # Fichier Excel à créer
+excel_file_path = "Pretraitement/clean_data.csv"  # Fichier Excel à créer
 txt_to_excel_with_selected_columns(txt_file_path, excel_file_path)

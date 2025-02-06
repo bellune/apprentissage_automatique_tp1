@@ -97,26 +97,26 @@ def enrich_users_with_tweets(df_users, df_tweets):
         print(f" Nombre de tweets après nettoyage : {len(df_tweets)}")
 
         # 2. Associer les tweets par utilisateur avec groupby() (beaucoup plus rapide)
-        tweet_counts = df_tweets.groupby("UserID")["Tweet"].count().reset_index()
-        tweet_counts.columns = ["UserID", "TotalTweets"]
-        df_users = df_users.merge(tweet_counts, on="UserID", how="left")
-        df_users["TotalTweets"].fillna(0, inplace=True)
+       # tweet_counts = df_tweets.groupby("UserID")["Tweet"].count().reset_index()
+       # tweet_counts.columns = ["UserID", "TotalTweets"]
+       # df_users = df_users.merge(tweet_counts, on="UserID", how="left")
+        #df_users["TotalTweets"].fillna(0, inplace=True)
 
         print("TotalTweets ajouté au dataframe des utilisateurs.")
 
         # 3. Calcul des proportions avec groupby()
         print("Calcul des proportions d'URL, mentions et hashtags...")
 
-        def proportion_calculator(df, character):
-            return df["Tweet"].apply(lambda x: fs.calculate_proportion("Tweet", character, x)).mean()
+        # def proportion_calculator(df, character):
+        #     return df["Tweet"].apply(lambda x: fs.calculate_proportion("Tweet", character, x)).mean()
 
-        proportions = df_tweets.groupby("UserID").apply(lambda x: pd.Series({
-            "proportion_url": proportion_calculator(x, "http"),
-            "proportion_mentions": proportion_calculator(x, "@"),
-            "proportion_hashtags": proportion_calculator(x, "#"),
-        })).reset_index()
+        # proportions = df_tweets.groupby("UserID").apply(lambda x: pd.Series({
+        #     "proportion_url": proportion_calculator(x, "http"),
+        #     "proportion_mentions": proportion_calculator(x, "@"),
+        #     "proportion_hashtags": proportion_calculator(x, "#"),
+        # })).reset_index()
 
-        df_users = df_users.merge(proportions, on="UserID", how="left")
+        # df_users = df_users.merge(proportions, on="UserID", how="left")
 
         print("Proportions calculées et ajoutées.")
 
@@ -150,14 +150,33 @@ def enrich_users_with_tweets(df_users, df_tweets):
         # time_stats_df = df_tweets.groupby("UserID").apply(time_stats).reset_index()
         # df_users = df_users.merge(time_stats_df, on="UserID", how="left")
         print("Calcul des temps moyens et maximum entre tweets...")
-        time_stats_df = fs.calculate_time_between_tweets(df_tweets)
+       
+        symbols = ["@", "http", "#"]
+        print(df_tweets)
+        # Appliquer la fonction sur `df_tweets`
+        proportions_df = fs.calculate_proportion("Tweet", symbols, df_tweets)
 
-       # S'assurer que les colonnes existent avant la fusion
-        if "mean" in time_stats_df.columns and "max" in time_stats_df.columns:
-            time_stats_df = time_stats_df.reset_index().rename(columns={"mean": "temps_moyen_entre_tweets", "max": "temps_max_entre_tweets"})
-            df_users = df_users.merge(time_stats_df, left_on="UserID", how="left").drop(columns=["nom_utilisateur"], errors="ignore")
-        else:
-            print("Les colonnes 'mean' et 'max' ne sont pas présentes dans le DataFrame retourné.")
+
+        # proportions_df = df_users.apply(
+        #     lambda row: fs.calculate_proportion(row['NumberOfTweets'], row['CreatedAt'])
+        #     if row['NumberOfTweets'] > 0 else 0, axis=1
+        # )
+
+      
+        # proportions = df_tweets["tweets"].apply(lambda x: fs.calculate_proportion("tweets", symbols, df_tweets))
+        # for symbol in symbols:
+        #     df_users[f"proportion_{symbol}"] = proportions.apply(lambda x: x[symbol])
+
+        # print(proportions_df)
+
+        # Fusionner les nouvelles colonnes avec `df_tweets`
+        df_tweets = pd.concat([df_tweets, proportions_df], axis=1)
+
+        # Regrouper les moyennes par utilisateur
+        proportions_grouped = df_tweets.groupby("UserID")[symbols].mean().reset_index()
+
+        # Fusionner avec `df_users`
+        df_users = df_users.merge(proportions_grouped, on="UserID", how="left")
 
         print("Statistiques temporelles ajoutées.")
 
@@ -245,27 +264,29 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
         return None
 
 
-user_columns = [
-    "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
-    "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
-]
+# user_columns = [
+#     "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
+#     "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
+# ]
 
-# Colonnes attendues pour les tweets
-tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
+# # Colonnes attendues pour les tweets
+# tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
 
 
-# Fichiers utilisateurs et classes associées
-user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
-user_classes = ["1", "0"]
-user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
+# # Fichiers utilisateurs et classes associées
+# user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
+# user_classes = ["1", "0"]
+# user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
 
-# Fichiers tweets et classes associées
-tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
-tweets_classes = ["1", "0"]
-tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
+# # Fichiers tweets et classes associées
+# tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
+# tweets_classes = ["1", "0"]
+# tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
 
 
 
 # Traitement des utilisateurs avec enrichissement des tweets
-if user_csv_path and tweets_csv_path:
-    final_data_path = process_users(user_csv_path, tweets_csv_path, "Pretraitement/FinalData")
+# if user_csv_path and tweets_csv_path:
+user_csv_path = "Pretraitement/RawData/users.csv"
+tweets_csv_path = "Pretraitement/RawData/tweets.csv"
+final_data_path = process_users(user_csv_path, tweets_csv_path, "Pretraitement/FinalData")

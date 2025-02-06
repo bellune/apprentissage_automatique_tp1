@@ -171,4 +171,5 @@ cython_debug/
 .pypirc
 Old/
 Datasets/
-RawData/tweets.csv
+
+Pretraitement/RawData/tweets.csv

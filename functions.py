@@ -15,7 +15,7 @@ def calculate_proportion(feature, symbols, df):
     def count_symbols_excluding_emails(text, symbols):
         words = str(text).split()
         words = [word for word in words if not re.match(r"[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}", word)]  # Exclure les emails
-        return {symbol: sum(1 for word in words if symbol in word) / len(words) if words else 0 for symbol in symbols}
+        return {symbol: round(sum(1 for word in words if symbol in word) / len(words),2) if words else 0 for symbol in symbols}
     
     return df[feature].apply(lambda x: count_symbols_excluding_emails(x, symbols))
 
@@ -28,10 +28,10 @@ def calculate_tweet_similarity(tweets):
     return np.mean(similarities) if similarities else np.nan
 
 def calculate_time_between_tweets(df):
-    df["date_tweet"] = pd.to_datetime(df["date_tweet"])
-    df.sort_values(by=["userID", "date_tweet"], inplace=True)
-    df["temps_entre_tweets"] = df.groupby("nom_utilisateur")["date_tweet"].diff().dt.total_seconds()
-    return df.groupby("nom_utilisateur")["temps_entre_tweets"].agg(["mean", "max"])
+    df["CreatedAt"] = pd.to_datetime(df["CreatedAt"])
+    df.sort_values(by=["UserID", "CreatedAt"], inplace=True)
+    df["temps_entre_tweets"] = df.groupby("UserID")["CreatedAt"].diff().dt.total_seconds()
+    return df.groupby("UserID")["temps_entre_tweets"].agg(["mean", "max"])
 
 #Calcule le nombre moyen de tweets par jour."""
 def calculer_tweets_par_jour(nombre_tweets, date_creation):

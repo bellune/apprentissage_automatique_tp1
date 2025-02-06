@@ -5,7 +5,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from itertools import combinations
 import re
-from datetime import datetime
 
 
 def calculate_following_followers_ratio(following, followers ):
@@ -37,7 +36,7 @@ def calculate_time_between_tweets(df):
 #Calcule le nombre moyen de tweets par jour."""
 def calculer_tweets_par_jour(nombre_tweets, date_creation):
     duree_vie_compte = calculer_duree_compte(date_creation)
-    return nombre_tweets / duree_vie_compte if duree_vie_compte > 0 else 0
+    return round(nombre_tweets / duree_vie_compte, 2) if duree_vie_compte > 0 else 0
 
 
 
@@ -58,3 +57,17 @@ def calculer_duree_compte(created_at):
     # Calcul du nombre de jours
     jours_ecoules = (pd.Timestamp.now() - created_at).days
     return max(jours_ecoules, 1)  # Retourner au moins 1 pour éviter la division par 0
+
+#message d'erreur dans un fichier log 
+def write_log(message, log_file="log_erreurs.txt"):
+   
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    log_message = f"[{timestamp}] {message}\n"
+
+    try:
+        with open(log_file, "a", encoding="utf-8") as f:
+            f.write(log_message)
+        print(f"⚠️ Erreur enregistrée dans {log_file}: {message}")
+    except Exception as e:
+        print(f"Impossible d'écrire dans le fichier log : {e}")

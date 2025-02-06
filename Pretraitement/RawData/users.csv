@@ -1,4 +1,4 @@
-0,1,2,3,4,5,6,7,Classe
+UserID,CreatedAt,CollectedAt,NumberOfFollowings,NumberOfFollowers,NumberOfTweets,LengthOfScreenName,LengthOfDescriptionInUserProfile,Classe
 6301,2006-09-18 01:07:50,2010-01-17 20:38:25,3269,3071,861,8,132,1
 10836,2006-10-27 14:38:04,2010-06-18 03:35:34,1949,793,226,9,134,1
 10997,2006-10-29 09:50:38,2010-04-24 01:12:40,1119,9644,38674,12,158,1

@@ -11,13 +11,13 @@ def calculate_following_followers_ratio(following, followers ):
     return round(following / (followers + 1), 3)  # Éviter la division par zéro
 
 #Calcul de la proportion de @, #, http  
-def calculate_proportion(feature, symbol, df):
-    def count_symbol_excluding_emails(text, symbol):
+def calculate_proportion(feature, symbols, df):
+    def count_symbols_excluding_emails(text, symbols):
         words = str(text).split()
         words = [word for word in words if not re.match(r"[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}", word)]  # Exclure les emails
-        return sum(1 for word in words if symbol in word) / len(words) if words else 0
+        return {symbol: sum(1 for word in words if symbol in word) / len(words) if words else 0 for symbol in symbols}
     
-    return df[feature].apply(lambda x: count_symbol_excluding_emails(x, symbol))
+    return df[feature].apply(lambda x: count_symbols_excluding_emails(x, symbols))
 
 def calculate_tweet_similarity(tweets):
     if len(tweets) < 2:

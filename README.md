@@ -2,9 +2,11 @@
 Ce travail pratique a pour objectif d’analyser et de comparer les performances de plusieurs algorithmes de classification à l’aide de données collectées sur X (Twitter).
 
 **Installations des dependances**
+
 pip install -r requirements.txt
 
 **Execution du programme**
+
 python main.py
 
 **Préparation des données**

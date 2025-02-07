@@ -78,7 +78,7 @@ def average_tweet_repetition(df):
     df_final = total_tweets_per_user.merge(repeated_tweet_counts, on="UserID", how="left").fillna(0)
 
     # 6. Calcul de la répétition moyenne
-    df_final["repetition_moyenne_tweets"] = round(df_final["nb_occurrences"] / df_final["nb_total_tweets"],2)
+    df_final["repetition_moyenne_tweets"] = round(df_final["nb_occurrences"] / df_final["nb_total_tweets"],3)
 
     # 7. Supprimer les colonnes intermédiaires
     df_final = df_final[["UserID", "repetition_moyenne_tweets"]]
@@ -139,7 +139,7 @@ def write_log(message, log_file="log_erreurs.txt"):
     try:
         with open(log_file, "a", encoding="utf-8") as f:
             f.write(log_message)
-        print(f"⚠️ Erreur enregistrée dans {log_file}: {message}")
+        print(f"Erreur {log_file}: {message}")
     except Exception as e:
         print(f"Impossible d'écrire dans le fichier log : {e}")
 

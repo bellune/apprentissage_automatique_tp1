@@ -156,3 +156,49 @@ def enrich_users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData/'):
     except Exception as e:
         print(f" Erreur lors de l'enrichissement avec les tweets : {e}")
         return proportions_grouped
+    
+
+
+def convert_txts_to_csv(txt_file_paths, classes, output_folder, output_filename, column_names, delimiter="\t"):
+   
+    try:
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+
+        output_csv_path = os.path.join(output_folder, output_filename)
+
+        all_data = []
+        log_errors = []  # Liste des erreurs
+
+        for txt_file_path, class_label in zip(txt_file_paths, classes):
+            if os.path.exists(txt_file_path):
+                try:
+                    df = pd.read_csv(txt_file_path, sep=delimiter, header=None, on_bad_lines="skip", dtype=str)
+                   
+                    if len(df.columns) != len(column_names):
+                        fs.write_log(f"Nombre  de colonnes incorrect dans {txt_file_path}. Attendu : {len(column_names)}, Trouvé : {len(df.columns)}")
+                        continue
+                    
+                    df.columns = column_names
+                    df["Classe"] = class_label  # Ajout de la colonne 'Classe'
+                    all_data.append(df)
+                    print(f"Fichier chargé : {txt_file_path} (Classe: {class_label})")
+                
+                except Exception as e:
+                    fs.write_log(f"Erreur lors de la lecture de {txt_file_path} : {e}")
+            else:
+                fs.write_log(f"Fichier introuvable : {txt_file_path}")
+
+        # Vérifier s'il y a des données avant de fusionner
+        if all_data:
+            final_df = pd.concat(all_data, ignore_index=True)
+            final_df.to_csv(output_csv_path, index=False, encoding="utf-8")
+            print(f"Fusion réussie : {output_csv_path}")
+        else:
+            fs.write_log("Aucun fichier valide n'a été fusionné.")
+
+        return output_csv_path if all_data else None
+
+    except Exception as e:
+        print(f"Erreur lors de la fusion des fichiers TXT en CSV : {e}")
+        return None

@@ -1,7 +1,6 @@
-
-[2025-02-06 23:30:10] ⚠️ 19783 lignes manquantes dans Datasets/content_polluters_tweets.txt (2333690/2353473 lignes importées).
-[2025-02-06 23:30:20] ⚠️ 13316 lignes manquantes dans Datasets/legitimate_users_tweets.txt (3246377/3259693 lignes importées).
-[2025-02-06 23:30:43]  Rapport des lignes manquantes par fichier :
-[2025-02-06 23:30:43] - Datasets/content_polluters_tweets.txt : 19783 lignes non chargées.
-[2025-02-06 23:30:43] - Datasets/legitimate_users_tweets.txt : 13316 lignes non chargées.
-[2025-02-06 23:31:03]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-07 15:01:43] 19783 lignes manquantes dans Datasets/content_polluters_tweets.txt (2333690/2353473 lignes importées).
+[2025-02-07 15:01:52] 13316 lignes manquantes dans Datasets/legitimate_users_tweets.txt (3246377/3259693 lignes importées).
+[2025-02-07 15:02:13]  Rapport des lignes manquantes par fichier :
+[2025-02-07 15:02:13] - Datasets/content_polluters_tweets.txt : 19783 lignes non chargées.
+[2025-02-07 15:02:13] - Datasets/legitimate_users_tweets.txt : 13316 lignes non chargées.
+[2025-02-07 15:02:33]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).

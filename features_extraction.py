@@ -250,38 +250,43 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
         return None
 
 
-user_columns = [
-    "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
-    "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
-]
-
-# Colonnes attendues pour les tweets
-tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
 
 
-# Fichiers utilisateurs et classes associées
-user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
-user_classes = ["1", "0"]
-user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
 
-# Fichiers tweets et classes associées
-tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
-tweets_classes = ["1", "0"]
-tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
+def extraction():
+    user_columns = [
+        "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
+        "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
+    ]
 
-#Traitement des utilisateurs avec des tweets
-# if user_csv_path and tweets_csv_path:
-# user_csv_path = "Pretraitement/RawData/users.csv"
-# tweets_csv_path = "Pretraitement/RawData/tweets.csv"
-
-# user_csv_path = "Pretraitement/RawData/users.csv"
-# tweets_csv_path = "Pretraitement/RawData/tweets.csv"
-if user_csv_path and tweets_csv_path:
-  tweets_byuser_path = users_with_tweets(tweets_csv_path)
+    # Colonnes attendues pour les tweets
+    tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
 
 
-if user_csv_path and tweets_csv_path:
-   final_data_path = process_users(user_csv_path, tweets_byuser_path, "Pretraitement/FinalData")
+    # Fichiers utilisateurs et classes associées
+    user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
+    user_classes = ["1", "0"]
+    user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
+
+    # Fichiers tweets et classes associées
+    tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
+    tweets_classes = ["1", "0"]
+    tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
+
+    #Traitement des utilisateurs avec des tweets
+    # if user_csv_path and tweets_csv_path:
+    # user_csv_path = "Pretraitement/RawData/users.csv"
+    # tweets_csv_path = "Pretraitement/RawData/tweets.csv"
+
+    # user_csv_path = "Pretraitement/RawData/users.csv"
+    # tweets_csv_path = "Pretraitement/RawData/tweets.csv"
+    if user_csv_path and tweets_csv_path:
+       tweets_byuser_path = users_with_tweets(tweets_csv_path)
+
+
+    if user_csv_path and tweets_csv_path:
+       final_data_path = process_users(user_csv_path, tweets_byuser_path, "Pretraitement/FinalData")
+
 
 
 

@@ -139,7 +139,7 @@ def write_log(message, log_file="log_erreurs.txt"):
     try:
         with open(log_file, "a", encoding="utf-8") as f:
             f.write(log_message)
-        print(f"Erreur {log_file}: {message}")
+        # print(f"Erreur {log_file}: {message}")
     except Exception as e:
         print(f"Impossible d'écrire dans le fichier log : {e}")
 

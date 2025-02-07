@@ -52,8 +52,7 @@ def convert_txts_to_csv(txt_file_paths, classes, output_folder, output_filename,
 
 
 
-
-def enrich_users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData/'):
+def enrich_users_with_tweets(rawpath, raw_tw_path = 'Pretraitement/RawData'):
     """ Associe les tweets aux utilisateurs et calcule les métriques. """
     if not os.path.exists(rawpath):
        os.makedirs(rawpath)
@@ -81,9 +80,18 @@ def enrich_users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData/'):
             df_tweets[f"proportion_{symbol}"] = proportions.apply(lambda x: x.get(symbol, 0))
 
         # Calculer la similarité des tweets par utilisateur
-        print("Calcul de la similarité moyenne des tweets...")
-        similarity_df = df_tweets.groupby("UserID")["Tweet"].apply(lambda tweets: fs.calculate_tweet_similarity(tweets.tolist())).reset_index()
-        similarity_df.rename(columns={"Tweet": "similarite_moyenne_tweets"}, inplace=True)
+        # print("Calcul de la similarité moyenne des tweets...")
+        # similarity_df = df_tweets.groupby("UserID")["Tweet"].apply(lambda tweets: fs.calculate_tweet_similarity(tweets.tolist())).reset_index()
+        # similarity_df.rename(columns={"Tweet": "similarite_moyenne_tweets"}, inplace=True)
+
+        # Calculer la repetion des tweets par utilisateur
+        print("Calcul de la repetition moyenne des tweets...")
+        df_avg_repetition = fs.average_tweet_repetition(df_tweets)
+
+        # Fusionner avec df_tweets
+        df_tweets = df_tweets.merge(df_avg_repetition, on="UserID", how="left")
+        df_tweets["repetition_moyenne_tweets"].fillna(0)  # Valeur 1 si l'utilisateur n'a que des tweets uniques
+
 
         # Calculer le temps entre tweets
         print("Calcul des temps entre tweets...")
@@ -91,14 +99,14 @@ def enrich_users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData/'):
         time_stats_df.rename(columns={"mean": "temps_moyen_entre_tweets", "max": "temps_max_entre_tweets"}, inplace=True)
 
         # Fusionner les données
-        df_tweets = df_tweets.merge(similarity_df, on="UserID", how="left")
+        # df_tweets = df_tweets.merge(similarity_df, on="UserID", how="left")
         df_tweets = df_tweets.merge(time_stats_df, on="UserID", how="left")
 
         # Regrouper les moyennes par utilisateur
-        cols = [f"proportion_{symbol}" for symbol in symbols] + ["similarite_moyenne_tweets", "temps_moyen_entre_tweets", "temps_max_entre_tweets"]
+        cols = [f"proportion_{symbol}" for symbol in symbols] + ["repetition_moyenne_tweets", "temps_moyen_entre_tweets", "temps_max_entre_tweets"]
         proportions_grouped = df_tweets.groupby("UserID")[cols].mean().reset_index()
 
-        print("Toutes les caracteristiiques sont calculées et ajoutées.")
+        print("Toutes les métriques calculées et ajoutées.")
 
         # Sauvegarde finale
         csv_path = os.path.join(raw_tw_path, "stat_byusers_data.csv")
@@ -109,14 +117,12 @@ def enrich_users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData/'):
 
         proportions_grouped.to_csv(csv_path, index=False, encoding='utf-8')
 
-        print("Statistique Tweets terminé avec succès :{csv_path} !")
+        print(f"Tweets terminé avec succès {csv_path}!")
         return csv_path
 
     except Exception as e:
-        print(f" Erreur lors de l'enrichissement avec les tweets : {e}")
-        return proportions_grouped
-
-
+        print(f"Erreur lors du chargement des tweets : {e}")
+        return None
 
 
 
@@ -184,13 +190,13 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
         df_final["proportion_@"] = df_final["proportion_@"].fillna(0)
         df_final["proportion_http"] = df_final["proportion_http"].fillna(0)
         df_final["proportion_#"] = df_final["proportion_#"].fillna(0)
-        df_final["similarite_moyenne_tweets"] = df_final["similarite_moyenne_tweets"].fillna(0)
+        df_final["repetition_moyenne_tweets"] = df_final["repetition_moyenne_tweets"].fillna(0)
         df_final["temps_moyen_entre_tweets"] = df_final["temps_moyen_entre_tweets"].fillna(0)
         df_final["temps_max_entre_tweets"] = df_final["temps_max_entre_tweets"].fillna(0)
 
         df_final = df_final[['LengthOfScreenName', 'LengthOfDescriptionInUserProfile', 'DaysSinceCreation', 
                              'NumberOfFollowings', 'NumberOfFollowers', 'Following/Followers Ratio', 'tweets_by_day',
-                             'proportion_http', 'proportion_@','proportion_#','temps_moyen_entre_tweets', 'temps_max_entre_tweets','similarite_moyenne_tweets',
+                             'proportion_http', 'proportion_@','proportion_#','temps_moyen_entre_tweets', 'temps_max_entre_tweets','repetition_moyenne_tweets',
                             'NumberOfTweets', 'Classe']]
 
         # Sauvegarde finale
@@ -206,32 +212,32 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
         return None
 
 
-user_columns = [
-    "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
-    "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
-]
+# user_columns = [
+#     "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
+#     "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
+# ]
 
-# Colonnes attendues pour les tweets
-tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
+# # Colonnes attendues pour les tweets
+# tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
 
 
-# Fichiers utilisateurs et classes associées
-user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
-user_classes = ["1", "0"]
-user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
+# # Fichiers utilisateurs et classes associées
+# user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
+# user_classes = ["1", "0"]
+# user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
 
-# Fichiers tweets et classes associées
-tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
-tweets_classes = ["1", "0"]
-tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
+# # Fichiers tweets et classes associées
+# tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
+# tweets_classes = ["1", "0"]
+# tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
 
 # Traitement des utilisateurs avec des tweets
 # if user_csv_path and tweets_csv_path:
 #user_csv_path = "Pretraitement/RawData/users.csv"
 #tweets_csv_path = "Pretraitement/RawData/tweets.csv"
 
-
-#tweets_csv_path = "Pretraitement/RawData/tweets2.csv"
+user_csv_path = "Pretraitement/RawData/users.csv"
+tweets_csv_path = "Pretraitement/RawData/tweets.csv"
 if user_csv_path and tweets_csv_path:
   tweets_byuser_path = enrich_users_with_tweets(tweets_csv_path)
 

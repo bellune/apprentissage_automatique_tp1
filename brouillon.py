@@ -89,3 +89,70 @@ def enrich_users_with_tweets(df_users, df_tweets):
     except Exception as e:
         print(f"Erreur lors de l'enrichissement avec les tweets : {e}")
         return df_users
+    
+
+
+
+def enrich_users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData/'):
+    """ Associe les tweets aux utilisateurs et calcule les métriques. """
+    if not os.path.exists(rawpath):
+       os.makedirs(rawpath)
+     
+    chunksize = 100000
+    df_tweets = pd.read_csv(rawpath, dtype=str, chunksize=chunksize)
+
+    proportions_grouped = pd.DataFrame()
+
+    try:
+        print("Début du traitement des tweets...")
+
+        # Convertir CreatedAt en datetime et filtrer les tweets valides
+        df_tweets["CreatedAt"] = pd.to_datetime(df_tweets["CreatedAt"], errors='coerce')
+        df_tweets = df_tweets.dropna(subset=["Tweet", "CreatedAt"])
+
+        print(f" Nombre de tweets après nettoyage : {len(df_tweets)}")
+
+        # Calcul des proportions d'URL, mentions et hashtags
+        print("Calcul des proportions d'URL, mentions et hashtags...")
+        symbols = ["@", "http", "#"]
+        proportions = fs.calculate_proportion("Tweet", symbols, df_tweets)
+
+        # Transformer chaque dictionnaire en colonnes individuelles
+        for symbol in symbols:
+            df_tweets[f"proportion_{symbol}"] = proportions.apply(lambda x: x.get(symbol, 0))
+
+        # Calculer la similarité des tweets par utilisateur
+        print("Calcul de la similarité moyenne des tweets...")
+        similarity_df = df_tweets.groupby("UserID")["Tweet"].apply(lambda tweets: fs.calculate_tweet_similarity(tweets.tolist())).reset_index()
+        similarity_df.rename(columns={"Tweet": "similarite_moyenne_tweets"}, inplace=True)
+
+        # Calculer le temps entre tweets
+        print("Calcul des temps entre tweets...")
+        time_stats_df = fs.calculate_time_between_tweets(df_tweets).reset_index()
+        time_stats_df.rename(columns={"mean": "temps_moyen_entre_tweets", "max": "temps_max_entre_tweets"}, inplace=True)
+
+        # Fusionner les données
+        df_tweets = df_tweets.merge(similarity_df, on="UserID", how="left")
+        df_tweets = df_tweets.merge(time_stats_df, on="UserID", how="left")
+
+        # Regrouper les moyennes par utilisateur
+        cols = [f"proportion_{symbol}" for symbol in symbols] + ["similarite_moyenne_tweets", "temps_moyen_entre_tweets", "temps_max_entre_tweets"]
+        proportions_grouped = df_tweets.groupby("UserID")[cols].mean().reset_index()
+
+        print("Toutes les caracteristiiques sont calculées et ajoutées.")
+
+        # Sauvegarde finale
+        csv_path = os.path.join(raw_tw_path, "stat_byusers_data.csv")
+        csv_folder = os.path.dirname(csv_path)
+
+        if not os.path.exists(csv_folder):
+            os.makedirs(csv_folder)
+
+        proportions_grouped.to_csv(csv_path, index=False, encoding='utf-8')
+
+        print("Statistique Tweets terminé avec succès :{csv_path} !")
+        return csv_path
+
+    except Exception as e:
+        print(f" Erreur lors de l'enrichissement avec les tweets : {e}")
+        return proportions_grouped

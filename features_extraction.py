@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import functions as fs
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 
 
@@ -135,7 +137,7 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
         # Étape 6 : Calcul du temps entre tweets
         print("Calcul des temps entre tweets...")
         time_stats_df = fs.calculate_time_between_tweets(df_tweets).reset_index()
-        time_stats_df.rename(columns={"mean": "temps_moyen_entre_tweets", "max": "temps_max_entre_tweets"}, inplace=True)
+        time_stats_df.rename(columns={"mean": "temps_moyen_entre_tweets", "max": "temps_max_entre_tweets"})
 
         # Fusionner les données
         df_tweets = df_tweets.merge(time_stats_df, on="UserID", how="left")
@@ -252,26 +254,103 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
 
 
 
+def prepare_and_split_data(file_path, output_folder="Pretraitement/train", output_folder_test = "Pretraitement/test", test_size=0.2, random_state=42):
+    """
+    Prépare et sépare les données en ensembles d'entraînement (80%) et de test (20%).
+
+    - Supprime les doublons.
+    - Remplace les valeurs manquantes par la médiane.
+    - Normalise les données (Z-score).
+    - Sépare les données en conservant un équilibre entre les classes.
+
+    Args:
+        file_path (str): Chemin du fichier CSV contenant les données.
+        output_folder (str): Dossier où enregistrer les fichiers.
+        test_size (float): Proportion des données à garder pour le test (ex: 0.2 = 20%).
+        random_state (int): Graine aléatoire pour la reproductibilité.
+
+    Returns:
+        dict: Dictionnaire contenant les chemins des fichiers générés.
+    """
+    try:
+        if not os.path.exists(output_folder) & os.path.exists(output_folder_test):
+            os.makedirs(output_folder)
+            os.makedirs(output_folder_test)
+
+        # 1. Charger les données
+        df = pd.read_csv(file_path)
+        print(f" Données chargées : {df.shape[0]} lignes, {df.shape[1]} colonnes.")
+
+        # Vérifier si la colonne de classe existe
+        if "Classe" not in df.columns:
+            raise ValueError("⚠️ Erreur : La colonne 'Classe' est absente du fichier CSV.")
+
+        # 2. Suppression des doublons
+        df.drop_duplicates()
+        print(f"Doublons supprimés. Nombre de lignes après suppression : {df.shape[0]}")
+
+        classe_col = df["Classe"]  # Sauvegarde la colonne "Classe"
+        df = df.drop_duplicates(subset=df.columns.drop("Classe"))  # Supprime les doublons sans toucher "Classe"
+       
+
+        # 3. Remplacement des valeurs manquantes par la médiane
+        for col in df.select_dtypes(include=["int64", "float64"]).columns:
+            median_value = df[col].median()
+            df[col].fillna(median_value)
+        print(" Valeurs manquantes remplacées par la médiane.")
+
+        #  4. Normalisation des données (Z-score)
+        scaler = StandardScaler()
+        numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
+        df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+        print("Normalisation des données terminée (Z-score).")
+
+        df["Classe"] = classe_col  # Restaure la colonne "Classe"
+
+        # 5. Séparation en train (80%) et test (20%) avec stratification sur "Classe"
+        df_train, df_test = train_test_split(df, test_size=test_size, stratify=df["Classe"], random_state=random_state)
+        print(f"Données séparées : {df_train.shape[0]} pour l'entraînement, {df_test.shape[0]} pour le test.")
+
+        # 6. Sauvegarde des fichiers
+        train_file = os.path.join(output_folder, "training_data.csv")
+        test_file = os.path.join(output_folder_test, "test_data.csv")
+        df_train.to_csv(train_file, index=False, encoding="utf-8")
+        df_test.to_csv(test_file, index=False, encoding="utf-8")
+
+        print(f"Fichiers enregistrés :\n - {train_file}\n - {test_file}")
+
+        return {"train": train_file, "test": test_file}
+
+    except Exception as e:
+        print(f"Erreur lors du traitement des données : {e}")
+        return None
+
+
+
+
+
+
+
 
 def extraction():
-    user_columns = [
-        "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
-        "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
-    ]
+    # user_columns = [
+    #     "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
+    #     "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
+    # ]
 
-    # Colonnes attendues pour les tweets
-    tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
+    # # Colonnes attendues pour les tweets
+    # tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
 
 
-    # Fichiers utilisateurs et classes associées
-    user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
-    user_classes = ["1", "0"]
-    user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
+    # # Fichiers utilisateurs et classes associées
+    # user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
+    # user_classes = ["1", "0"]
+    # user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
 
-    # Fichiers tweets et classes associées
-    tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
-    tweets_classes = ["1", "0"]
-    tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
+    # # Fichiers tweets et classes associées
+    # tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
+    # tweets_classes = ["1", "0"]
+    # tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
 
     #Traitement des utilisateurs avec des tweets
     # if user_csv_path and tweets_csv_path:
@@ -280,12 +359,19 @@ def extraction():
 
     # user_csv_path = "Pretraitement/RawData/users.csv"
     # tweets_csv_path = "Pretraitement/RawData/tweets.csv"
-    if user_csv_path and tweets_csv_path:
-       tweets_byuser_path = users_with_tweets(tweets_csv_path)
+    # if user_csv_path and tweets_csv_path:
+    #    tweets_byuser_path = users_with_tweets(tweets_csv_path)
 
 
-    if user_csv_path and tweets_csv_path:
-       final_data_path = process_users(user_csv_path, tweets_byuser_path, "Pretraitement/FinalData")
+    # if user_csv_path and tweets_csv_path:
+    #    final_data_path = process_users(user_csv_path, tweets_byuser_path, "Pretraitement/FinalData")
+
+    
+        # Exemple d'utilisation
+    # if final_data_path:
+        final_data_path = "Pretraitement/FinalData/final_users_data.csv"  # Remplace par le chemin de ton fichier
+        data_files = prepare_and_split_data(final_data_path)
+
 
 
 

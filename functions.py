@@ -105,29 +105,30 @@ def calculate_time_between_tweets(df):
 
 
 #Calcule le nombre moyen de tweets par jour."""
-def calculer_tweets_par_jour(nombre_tweets, date_creation):
-    duree_vie_compte = calculer_duree_compte(date_creation)
+def calculer_tweets_par_jour(nombre_tweets,duree_vie_compte):
     return round(nombre_tweets / duree_vie_compte, 2) if duree_vie_compte > 0 else 0
 
 
 
 #Calcule la durée d'existence d'un compte Twitter.
 # Retourne le nombre de jours depuis la création du compte
-def calculer_duree_compte(created_at):
+def calculer_duree_compte(created_at, collected_at):
 
-    if pd.isna(created_at):
+    if pd.isna(created_at) | pd.isna(collected_at):
         return 0  # Si la date est manquante, retourner 0
 
     # Vérifier si la date est déjà un objet datetime
-    if isinstance(created_at, str):
+    if isinstance(created_at, str) | isinstance(collected_at, str):
         try:
             created_at = pd.to_datetime(created_at, errors='coerce')  # Convertir la chaîne en datetime
+            collected_at = pd.to_datetime(collected_at, errors='coerce')
         except Exception:
             return 0  # Retourner 0 en cas d'erreur
 
     # Calcul du nombre de jours
-    jours_ecoules = (pd.Timestamp.now() - created_at).days
+    jours_ecoules = (collected_at - created_at).days
     return max(jours_ecoules, 1)  # Retourner au moins 1 pour éviter la division par 0
+
 
 #message d'erreur dans un fichier log 
 def write_log(message, log_file="log_erreurs.txt"):

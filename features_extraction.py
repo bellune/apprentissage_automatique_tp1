@@ -91,7 +91,10 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
     #Associe les tweets aux utilisateurs et calcule les métriques. 
    # Vérifie que toutes les lignes du fichier CSV ont été chargées.
     
-    if not os.path.exists(raw_tw_path):
+    if not os.path.exists(rawpath) :
+        os.makedirs(rawpath)
+
+    if not os.path.exists(raw_tw_path) :
         os.makedirs(raw_tw_path)
 
     try:
@@ -137,7 +140,9 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
         # Étape 6 : Calcul du temps entre tweets
         print("Calcul des temps entre tweets...")
         time_stats_df = fs.calculate_time_between_tweets(df_tweets).reset_index()
-        time_stats_df.rename(columns={"mean": "temps_moyen_entre_tweets", "max": "temps_max_entre_tweets"})
+        time_stats_df.rename(columns={"mean": "temps_moyen_entre_tweets", "max": "temps_max_entre_tweets"},inplace=True)
+        # print(time_stats_df)
+        # df_tweets["repetition_moyenne_tweets"].fillna(0)
 
         # Fusionner les données
         df_tweets = df_tweets.merge(time_stats_df, on="UserID", how="left")
@@ -155,7 +160,18 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
         if not os.path.exists(csv_folder):
             os.makedirs(csv_folder)
 
+        # Vérifier que proportions_grouped n'est pas vide avant d'écrire le fichier
+        if proportions_grouped is None or proportions_grouped.empty:
+            print("Erreur : Aucune donnée disponible pour sauvegarde !")
+            return None
+
+        # Sauvegarde du fichier CSV
         proportions_grouped.to_csv(csv_path, index=False, encoding='utf-8')
+
+        # Vérification que le fichier a bien été créé
+        if not os.path.exists(csv_path):
+            print(f"Erreur : Le fichier {csv_path} n'a pas été généré !")
+            return None
 
         print(f"Tweets traités avec succès : {csv_path}!")
         return csv_path
@@ -181,7 +197,7 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
         # Sélection des colonnes utiles
     
         selected_columns = [
-            'UserID', 'CreatedAt', 'NumberOfFollowings', 'NumberOfFollowers', 
+            'UserID', 'CreatedAt', 'CollectedAt', 'NumberOfFollowings', 'NumberOfFollowers', 
             'NumberOfTweets', 'LengthOfScreenName', 'LengthOfDescriptionInUserProfile', 'Classe'
         ]
 
@@ -212,7 +228,12 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
             fs.write_log(f"Erreur lors de la conversion de CreatedAt : {e}")
 
         # Ajouter la colonne "DaysSinceCreation"
-        df_users["DaysSinceCreation"] = df_users["CreatedAt"].apply(fs.calculer_duree_compte)
+        # df_users["DaysSinceCreation"] = df_users["CreatedAt"].apply(fs.calculer_duree_compte)
+
+        df_users['DaysSinceCreation'] = df_users.apply(
+            lambda row: fs.calculer_duree_compte(row['CreatedAt'], row['CollectedAt'])
+            if row['CreatedAt'] and row['CollectedAt']  else 0, axis=1
+        )
 
         # Ajouter la colonne du ratio
         df_users['Following/Followers Ratio'] = df_users.apply(
@@ -221,7 +242,7 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
         )
 
         df_users['tweets_by_day'] = df_users.apply(
-            lambda row: fs.calculer_tweets_par_jour(row['NumberOfTweets'], row['CreatedAt'])
+            lambda row: fs.calculer_tweets_par_jour(row['NumberOfTweets'], row['DaysSinceCreation'])
             if row['NumberOfTweets'] > 0 else 0, axis=1
         )
 
@@ -236,8 +257,7 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
 
         df_final = df_final[['LengthOfScreenName', 'LengthOfDescriptionInUserProfile', 'DaysSinceCreation', 
                              'NumberOfFollowings', 'NumberOfFollowers', 'Following/Followers Ratio', 'tweets_by_day',
-                             'proportion_http', 'proportion_@','proportion_#','temps_moyen_entre_tweets', 'temps_max_entre_tweets','repetition_moyenne_tweets',
-                            'NumberOfTweets', 'Classe']]
+                             'proportion_http', 'proportion_@','proportion_#','temps_moyen_entre_tweets', 'temps_max_entre_tweets','repetition_moyenne_tweets', 'Classe']]
 
         # Sauvegarde finale
         processed_csv_path = os.path.join(processed_folder, "final_users_data.csv")
@@ -297,13 +317,18 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
         for col in df.select_dtypes(include=["int64", "float64"]).columns:
             median_value = df[col].median()
             df[col].fillna(median_value)
+            print(df)
         print(" Valeurs manquantes remplacées par la médiane.")
+
+        
 
         #  4. Normalisation des données (Z-score)
         scaler = StandardScaler()
         numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
         df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
         print("Normalisation des données terminée (Z-score).")
+
+        print(df)
 
         df["Classe"] = classe_col  # Restaure la colonne "Classe"
 
@@ -352,25 +377,28 @@ def extraction():
     # tweets_classes = ["1", "0"]
     # tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
 
-    #Traitement des utilisateurs avec des tweets
+    # Traitement des utilisateurs avec des tweets
     # if user_csv_path and tweets_csv_path:
     # user_csv_path = "Pretraitement/RawData/users.csv"
     # tweets_csv_path = "Pretraitement/RawData/tweets.csv"
 
-    # user_csv_path = "Pretraitement/RawData/users.csv"
-    # tweets_csv_path = "Pretraitement/RawData/tweets.csv"
-    # if user_csv_path and tweets_csv_path:
-    #    tweets_byuser_path = users_with_tweets(tweets_csv_path)
+    user_csv_path = "Pretraitement/RawData/users.csv"
+    tweets_csv_path = "Pretraitement/RawData/tweets.csv"
+    
+    if user_csv_path and tweets_csv_path:
+        tweets_byuser_path = users_with_tweets(tweets_csv_path)
+        if user_csv_path and tweets_csv_path:
+                final_data_path = process_users(user_csv_path, tweets_byuser_path, "Pretraitement/FinalData")
+                        # Exemple d'utilisation
+                if final_data_path:
+                    # final_data_path = "Pretraitement/FinalData/final_users_data.csv"  # Remplace par le chemin de ton fichier
+                    data_files = prepare_and_split_data(final_data_path)
 
 
-    # if user_csv_path and tweets_csv_path:
-    #    final_data_path = process_users(user_csv_path, tweets_byuser_path, "Pretraitement/FinalData")
+   
 
     
-        # Exemple d'utilisation
-    # if final_data_path:
-        final_data_path = "Pretraitement/FinalData/final_users_data.csv"  # Remplace par le chemin de ton fichier
-        data_files = prepare_and_split_data(final_data_path)
+extraction()
 
 
 

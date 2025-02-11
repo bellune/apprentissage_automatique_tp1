@@ -4,3 +4,26 @@
 [2025-02-07 15:02:13] - Datasets/content_polluters_tweets.txt : 19783 lignes non chargées.
 [2025-02-07 15:02:13] - Datasets/legitimate_users_tweets.txt : 13316 lignes non chargées.
 [2025-02-07 15:02:33]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 08:32:56] 19783 lignes manquantes dans Datasets/content_polluters_tweets.txt (2333690/2353473 lignes importées).
+[2025-02-11 08:33:08] 13316 lignes manquantes dans Datasets/legitimate_users_tweets.txt (3246377/3259693 lignes importées).
+[2025-02-11 08:33:36]  Rapport des lignes manquantes par fichier :
+[2025-02-11 08:33:36] - Datasets/content_polluters_tweets.txt : 19783 lignes non chargées.
+[2025-02-11 08:33:36] - Datasets/legitimate_users_tweets.txt : 13316 lignes non chargées.
+[2025-02-11 08:34:04]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 08:36:40] Erreur lors du traitement des tweets : "Columns not found: 'temps_max_entre_tweets', 'temps_moyen_entre_tweets'"
+[2025-02-11 08:57:10]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 08:59:51] Erreur lors du traitement des tweets : "Columns not found: 'temps_max_entre_tweets', 'temps_moyen_entre_tweets'"
+[2025-02-11 09:05:12]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 09:08:44] Erreur lors du traitement des tweets : "Columns not found: 'temps_max_entre_tweets', 'temps_moyen_entre_tweets'"
+[2025-02-11 09:33:30]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 09:36:42] Erreur lors du traitement des tweets : "Columns not found: 'temps_max_entre_tweets', 'temps_moyen_entre_tweets'"
+[2025-02-11 09:51:05]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 09:54:42] Erreur lors du traitement des tweets : "Columns not found: 'temps_max_entre_tweets', 'temps_moyen_entre_tweets'"
+[2025-02-11 10:00:52]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 10:03:55] Erreur lors du traitement des tweets : "Columns not found: 'temps_moyen_entre_tweets', 'temps_max_entre_tweets'"
+[2025-02-11 13:42:34]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 13:44:50] Erreur lors du traitement des tweets : "Columns not found: 'temps_moyen_entre_tweets', 'temps_max_entre_tweets'"
+[2025-02-11 14:01:33]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 14:03:45] Erreur lors du traitement des tweets : 'SeriesGroupBy' object has no attribute 'temps_moyen_entre_tweets'
+[2025-02-11 14:12:05]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).
+[2025-02-11 14:37:11]  33098 lignes manquantes dans Pretraitement/RawData/tweets.csv (5580067/5613165 lignes importées).

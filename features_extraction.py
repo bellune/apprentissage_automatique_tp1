@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import functions as fs
 from sklearn.model_selection import train_test_split
+import csv  # Pour gérer les erreurs de formatage
 from sklearn.preprocessing import StandardScaler
 
 
@@ -31,8 +32,8 @@ def convert_txts_to_csv(txt_file_paths, classes, output_folder, output_filename,
                     # Étape 1 : Compter le nombre de lignes dans le fichier TXT
                     total_lines_txt = count_lines_in_txt(txt_file_path)
 
-                    # Étape 2 : Charger les données
-                    df = pd.read_csv(txt_file_path, sep=delimiter, header=None, on_bad_lines="skip")
+                    # Étape 2 : Charger les données / on_bad_lines="skip"
+                    df = pd.read_csv(txt_file_path, sep=delimiter, header=None,quoting=csv.QUOTE_NONE)
 
                     # Étape 3 : Vérifier si toutes les lignes ont été chargées
                     total_lines_loaded = len(df)
@@ -303,7 +304,7 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
 
         # Vérifier si la colonne de classe existe
         if "Classe" not in df.columns:
-            raise ValueError("⚠️ Erreur : La colonne 'Classe' est absente du fichier CSV.")
+            raise ValueError("Erreur : La colonne 'Classe' est absente du fichier CSV.")
 
         # 2. Suppression des doublons
         df.drop_duplicates()
@@ -332,19 +333,32 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
 
         df["Classe"] = classe_col  # Restaure la colonne "Classe"
 
-        # 5. Séparation en train (80%) et test (20%) avec stratification sur "Classe"
+        # 5. Un sous-ensemble où les pollueurs représentent 5 % des utilisateurs légitimes.
+       
+        df_dq = get_unbalance_data(df)
+
+        # 6. Séparation en train (80%) et test (20%) avec stratification sur "Classe"
         df_train, df_test = train_test_split(df, test_size=test_size, stratify=df["Classe"], random_state=random_state)
         print(f"Données séparées : {df_train.shape[0]} pour l'entraînement, {df_test.shape[0]} pour le test.")
 
-        # 6. Sauvegarde des fichiers
+        # 7. Séparation en train (80%) et test (20%) avec stratification sur "Classe" des donnees desequilibree
+        df_train_unb, df_test_unb = train_test_split(df_dq, test_size=test_size, stratify=df_dq["Classe"], random_state=random_state)
+        print(f"Données désequilibrées séparées : {df_train_unb.shape[0]} pour l'entraînement, {df_test_unb.shape[0]} pour le test.")
+
+        # 8. Sauvegarde des fichiers
         train_file = os.path.join(output_folder, "training_data.csv")
         test_file = os.path.join(output_folder_test, "test_data.csv")
+        train_file_unb = os.path.join(output_folder, "training_unbalance_data.csv")
+        test_file_unb = os.path.join(output_folder_test, "test_unbalance_data.csv")
+
         df_train.to_csv(train_file, index=False, encoding="utf-8")
         df_test.to_csv(test_file, index=False, encoding="utf-8")
+        df_train_unb.to_csv(train_file_unb, index=False, encoding="utf-8")
+        df_test_unb.to_csv(test_file_unb, index=False, encoding="utf-8")
 
-        print(f"Fichiers enregistrés :\n - {train_file}\n - {test_file}")
+        print(f"Fichiers enregistrés :\n - {train_file} /  {train_file_unb}  \n - {test_file} / {test_file_unb}")
 
-        return {"train": train_file, "test": test_file}
+        return {"train": [train_file, train_file_unb], "test": [test_file, test_file_unb]}
 
     except Exception as e:
         print(f"Erreur lors du traitement des données : {e}")
@@ -353,37 +367,57 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
 
 
 
+def get_unbalance_data(df):
+    # Séparer les légitimes et les pollueurs
+    df_legitimes = df[df["Classe"] == 0]  # Utilisateurs légitimes
+    df_pollueurs = df[df["Classe"] == 1]  # Pollueurs
+
+    # Calculer le nombre de pollueurs à garder (5 % des légitimes)
+    nb_legitimes = len(df_legitimes)
+    nb_pollueurs_a_garder = int(0.05 * nb_legitimes)  # 5 % des légitimes
+    print(nb_pollueurs_a_garder)
+
+    # Sélectionner un échantillon de pollueurs (aléatoire)
+    df_pollueurs_reduits = df_pollueurs.sample(n=nb_pollueurs_a_garder, random_state=42)
+
+    # Construire le nouveau sous-ensemble
+    df_sous_ensemble = pd.concat([df_legitimes, df_pollueurs_reduits], ignore_index=True)
+
+    # Vérifier la distribution des classes
+    print(f"Nombre de legitimes : {nb_legitimes} Nombre de pollueurs(5%) : {nb_pollueurs_a_garder}. total : {df_sous_ensemble["Classe"].value_counts()}")
+    return df_sous_ensemble
+
 
 
 
 
 def extraction():
-    # user_columns = [
-    #     "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
-    #     "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
-    # ]
+    user_columns = [
+        "UserID", "CreatedAt", "CollectedAt", "NumberOfFollowings", "NumberOfFollowers",
+        "NumberOfTweets", "LengthOfScreenName", "LengthOfDescriptionInUserProfile"
+    ]
 
-    # # Colonnes attendues pour les tweets
-    # tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
+    # Colonnes attendues pour les tweets
+    tweet_columns = ["UserID", "TweetID", "Tweet", "CreatedAt"]
 
 
-    # # Fichiers utilisateurs et classes associées
-    # user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
-    # user_classes = ["1", "0"]
-    # user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
+    # Fichiers utilisateurs et classes associées
+    user_txt_files = ["Datasets/content_polluters.txt", "Datasets/legitimate_users.txt"]
+    user_classes = ["1", "0"]
+    user_csv_path = convert_txts_to_csv(user_txt_files, user_classes, "Pretraitement/RawData", "users.csv", user_columns)
 
-    # # Fichiers tweets et classes associées
-    # tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
-    # tweets_classes = ["1", "0"]
-    # tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
+    # Fichiers tweets et classes associées
+    tweets_txt_files = ["Datasets/content_polluters_tweets.txt", "Datasets/legitimate_users_tweets.txt"]
+    tweets_classes = ["1", "0"]
+    tweets_csv_path = convert_txts_to_csv(tweets_txt_files, tweets_classes, "Pretraitement/RawData", "tweets.csv", tweet_columns)
 
     # Traitement des utilisateurs avec des tweets
     # if user_csv_path and tweets_csv_path:
     # user_csv_path = "Pretraitement/RawData/users.csv"
     # tweets_csv_path = "Pretraitement/RawData/tweets.csv"
 
-    user_csv_path = "Pretraitement/RawData/users.csv"
-    tweets_csv_path = "Pretraitement/RawData/tweets.csv"
+    # user_csv_path = "Pretraitement/RawData/users.csv"
+    # tweets_csv_path = "Pretraitement/RawData/tweets.csv"
     
     if user_csv_path and tweets_csv_path:
         tweets_byuser_path = users_with_tweets(tweets_csv_path)
@@ -391,14 +425,13 @@ def extraction():
                 final_data_path = process_users(user_csv_path, tweets_byuser_path, "Pretraitement/FinalData")
                         # Exemple d'utilisation
                 if final_data_path:
-                    # final_data_path = "Pretraitement/FinalData/final_users_data.csv"  # Remplace par le chemin de ton fichier
-                    data_files = prepare_and_split_data(final_data_path)
+                        final_data_path = "Pretraitement/FinalData/final_users_data.csv"  # Remplace par le chemin de ton fichier
+                        data_files = prepare_and_split_data(final_data_path)
 
 
    
 
-    
-extraction()
+
 
 
 

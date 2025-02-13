@@ -1,3 +1,9 @@
 pandas
 numpy
 ace_tools
+matplotlib
+sklearn
+seaborn
+functions
+config
+os

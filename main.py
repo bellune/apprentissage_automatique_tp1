@@ -1,14 +1,18 @@
 import sys
 import traceback
 import functions as fs  # Pour enregistrer les erreurs
+import comparison_all_algorithms as alg
 import features_extraction as exf  # Module contenant `extraction()`
 
 def main():
     """Point d'entrée principal du programme."""
     try:
         print("Début de l'extraction des données...")
-        exf.extraction()   
+        # exf.extraction()   
         print("Extraction terminée avec succès !")
+        print("Début d'entrainement...")
+        alg.execute_algo()
+        print("Entrainement terminée avec succès !")
 
     except Exception as e:
         error_message = f"Une erreur est survenue : {e}\n{traceback.format_exc()}"

@@ -12,7 +12,6 @@ from sklearn.metrics import (
 
 
 
-
 def all_algorithme(models, train_file,test_file, result_file,title,result_folder="resultats/"):
 
 
@@ -30,8 +29,6 @@ def all_algorithme(models, train_file,test_file, result_file,title,result_folder
     y_test = df_test["Classe"]
 
    
-        
-
     # 4. Entraîner et évaluer chaque modèle
     results = []
     plt.figure(figsize=(8, 6))  # Préparer une figure pour la courbe ROC

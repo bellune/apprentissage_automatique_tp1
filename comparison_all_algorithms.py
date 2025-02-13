@@ -4,6 +4,8 @@ import functions as fs
 import matplotlib.pyplot as plt
 from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier
 from sklearn.tree import DecisionTreeClassifier
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.metrics import (
     accuracy_score, classification_report, confusion_matrix, roc_auc_score, roc_curve
 )
@@ -48,26 +50,39 @@ def all_algorithme(train_file,test_file, result_file,title,result_folder="result
         y_prob = model.predict_proba(X_test)[:, 1]  # Probabilités pour l'AUC ROC
         
         # Matrice de confusion
-        tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+            # Matrice de confusion détaillée
+        conf_matrix = confusion_matrix(y_test, y_pred)
 
-        # Calcul des métriques demandées
-        tp_rate = tp / (tp + fn) if (tp + fn) > 0 else 0  # Taux de vrais positifs
+        print("\n📝 Matrice de confusion :")
+        print(conf_matrix)  # Afficher la matrice
+
+        tn, fp, fn, tp = conf_matrix.ravel()
+
+        
+
+         # Calcul des métriques UNIQUEMENT POUR LES POLLUEURS (Classe = 1)
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0  # Précision
+        recall = tp / (tp + fn) if (tp + fn) > 0 else 0  # Rappel (déjà TP Rate)
         fp_rate = fp / (fp + tn) if (fp + tn) > 0 else 0  # Taux de faux positifs
-        f1_score = 2 * tp / (2 * tp + fp + fn) if (2 * tp + fp + fn) > 0 else 0  # F-mesure
-        auc_score = roc_auc_score(y_test, y_prob)  # AUC ROC
+        f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0  # F-mesure
+        auc_score = roc_auc_score(y_test, y_prob)  
 
         # Stocker les résultats
         results.append({
-            "Model": name,
-            "TP Rate (Taux de vrais positifs)": round(tp_rate, 4),
-            "FP Rate (Taux de faux positifs)": round(fp_rate, 4),
-            "F-mesure": round(f1_score, 4),
-            "AUC ROC": round(auc_score, 4)
+                    "Modele": name,
+                    "Precision (Pollueurs)": round(precision, 4),
+                    "Rappel (Pollueurs)": round(recall, 4),
+                    "FP Rate (Pollueurs)": round(fp_rate, 4),
+                    "F-mesure (Pollueurs)": round(f1_score, 4),
+                    "AUC ROC ": round(auc_score, 4)
         })
 
         # Tracer la courbe ROC pour ce modèle
         fpr, tpr, _ = roc_curve(y_test, y_prob)
         plt.plot(fpr, tpr, label=f'{name} (AUC = {auc_score:.4f})')
+
+        # Exemple d'utilisation après l'entraînement d'un modèle
+        plot_confusion_matrix(y_test, y_pred, name, title)
 
     # 5. Convertir en DataFrame pour afficher proprement
     df_results = pd.DataFrame(results)
@@ -85,6 +100,7 @@ def all_algorithme(train_file,test_file, result_file,title,result_folder="result
     df_results.to_csv(csv_path, index=False, encoding='utf-8')
     print(f"Résultats enregistrés : {csv_path}")
     get_courve(title,plt)
+   
 
 
 
@@ -94,7 +110,7 @@ def execute_algo():
     train_file = "Pretraitement/train/training_data.csv"
     test_file = "Pretraitement/test/test_data.csv"
     result_file = 'comparaison_modele.csv'
-    title = 'Comparaison des courbes ROC - Données Equilibrées'
+    title = 'Données Equilibrées'
     all_algorithme(train_file,test_file,result_file,title)
 
     # Entrainement des donnees desequilibrees
@@ -105,13 +121,58 @@ def execute_algo():
     all_algorithme(train_file,test_file,result_file,title)
 
 
-def get_courve(title,plt):
+def get_courve(title,plt, save_folder="resultats/graphes"):
+
+     # Créer le dossier s'il n'existe pas
+    os.makedirs(save_folder, exist_ok=True)
+
+    file_name = f"roc_curve_{title.replace(' ', '_')}.png"
+    file_path = os.path.join(save_folder, file_name)
+
     # Tracer la courbe ROC finale
     plt.plot([0, 1], [0, 1], color='gray', linestyle='--')  # Diagonale
     plt.xlabel('Taux de Faux Positifs (FPR)')
     plt.ylabel('Taux de Vrais Positifs (TPR)')
-    plt.title(title)
+    plt.title('Comparaison des courbes ROC - '+title)
     plt.legend()
     plt.grid()
-    plt.show()
+    # plt.show()
+    # Sauvegarder l'image
+    plt.savefig(file_path, bbox_inches="tight", dpi=300)
+    plt.close()  # Fermer la figure pour économiser la mémoire
+
+    print(f"Courbe ROC sauvegardée : {file_path}")
+
+
+
+
+# Fonction pour tracer et enregistrer la matrice de confusion
+def plot_confusion_matrix(y_test, y_pred, model_name, title, save_folder="resultats/graphes"):
+    # Créer le dossier s'il n'existe pas
+    os.makedirs(save_folder, exist_ok=True)
+
+    # Générer la matrice de confusion
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Tracer la matrice sous forme de carte de chaleur
+    plt.figure(figsize=(6, 5))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
+                xticklabels=["Légitimes (0)", "Pollueurs (1)"], 
+                yticklabels=["Légitimes (0)", "Pollueurs (1)"])
+    
+    plt.xlabel("Prédictions")
+    plt.ylabel("Classes")
+    plt.title(f"Matrice de Confusion - {model_name}")
+
+    # Définir le chemin du fichier image
+    file_path = os.path.join(save_folder, f"conf_matrix_{title}_{model_name}.png")
+
+    # Sauvegarder l'image
+    plt.savefig(file_path, bbox_inches="tight", dpi=300)
+    plt.close()  # Fermer la figure pour économiser la mémoire
+
+    print(f"Matrice de confusion sauvegardée : {file_path}")
+
+
+
 

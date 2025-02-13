@@ -11,6 +11,8 @@ from sklearn.metrics import (
 )
 
 
+
+
 def all_algorithme(train_file,test_file, result_file,title,result_folder="resultats/"):
 
 
@@ -50,10 +52,9 @@ def all_algorithme(train_file,test_file, result_file,title,result_folder="result
         y_prob = model.predict_proba(X_test)[:, 1]  # Probabilités pour l'AUC ROC
         
         # Matrice de confusion
-            # Matrice de confusion détaillée
         conf_matrix = confusion_matrix(y_test, y_pred)
 
-        print("\n📝 Matrice de confusion :")
+        print("\n Matrice de confusion :")
         print(conf_matrix)  # Afficher la matrice
 
         tn, fp, fn, tp = conf_matrix.ravel()
@@ -119,6 +120,11 @@ def execute_algo():
     result_file = 'comparaison_modele_unbalance.csv'
     title = 'Comparaison des courbes ROC - Données Déséquilibrées'
     all_algorithme(train_file,test_file,result_file,title)
+
+
+
+
+
 
 
 def get_courve(title,plt, save_folder="resultats/graphes"):

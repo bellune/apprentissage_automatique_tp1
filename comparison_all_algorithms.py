@@ -2,12 +2,9 @@ import os
 import pandas as pd
 import functions as fs
 import matplotlib.pyplot as plt
-from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier
-from sklearn.tree import DecisionTreeClassifier
 import seaborn as sns
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from sklearn.naive_bayes import GaussianNB
 import matplotlib.pyplot as plt
+import config as conf
 from sklearn.metrics import (
     accuracy_score, classification_report, confusion_matrix, roc_auc_score, roc_curve
 )
@@ -15,7 +12,8 @@ from sklearn.metrics import (
 
 
 
-def all_algorithme(train_file,test_file, result_file,title,result_folder="resultats/"):
+
+def all_algorithme(models, train_file,test_file, result_file,title,result_folder="resultats/"):
 
 
     # 1. Charger les fichiers CSV
@@ -31,16 +29,7 @@ def all_algorithme(train_file,test_file, result_file,title,result_folder="result
     X_test = df_test.drop(columns=["Classe"])
     y_test = df_test["Classe"]
 
-    # 3. Définir les modèles
-    models = {
-        "Decision Tree": DecisionTreeClassifier(random_state=42),
-        "Bagging (50 arbres)": BaggingClassifier(estimator=DecisionTreeClassifier(),
-                                                  n_estimators=50, random_state=42),
-        "AdaBoost (50 arbres)": AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=1),
-                                                    n_estimators=50, learning_rate=1.0, algorithm="SAMME",random_state=42),
-        "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=3),
-        "Random Forest": RandomForestClassifier(n_estimators=100, max_depth=3),
-        "Naives baysien":  GaussianNB() }
+   
         
 
     # 4. Entraîner et évaluer chaque modèle
@@ -118,14 +107,14 @@ def execute_algo():
     test_file = "Pretraitement/test/test_data.csv"
     result_file = 'comparaison_modele.csv'
     title = 'Données Equilibrées'
-    all_algorithme(train_file,test_file,result_file,title)
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
 
     # Entrainement des donnees desequilibrees
     train_file = "Pretraitement/train/training_unbalance_data.csv"
     test_file = "Pretraitement/test/test_unbalance_data.csv"
     result_file = 'comparaison_modele_unbalance.csv'
-    title = 'Comparaison des courbes ROC - Données Déséquilibrées'
-    all_algorithme(train_file,test_file,result_file,title)
+    title = 'Données Déséquilibrées'
+    all_algorithme(conf.models_unbalance, train_file,test_file,result_file,title)
 
 
 

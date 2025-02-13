@@ -283,15 +283,6 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
     - Remplace les valeurs manquantes par la médiane.
     - Normalise les données (Z-score).
     - Sépare les données en conservant un équilibre entre les classes.
-
-    Args:
-        file_path (str): Chemin du fichier CSV contenant les données.
-        output_folder (str): Dossier où enregistrer les fichiers.
-        test_size (float): Proportion des données à garder pour le test (ex: 0.2 = 20%).
-        random_state (int): Graine aléatoire pour la reproductibilité.
-
-    Returns:
-        dict: Dictionnaire contenant les chemins des fichiers générés.
     """
     try:
         if not os.path.exists(output_folder) & os.path.exists(output_folder_test):

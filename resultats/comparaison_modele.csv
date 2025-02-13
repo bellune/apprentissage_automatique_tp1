@@ -1,4 +1,4 @@
-Modèle,TP Rate (Taux de vrais positifs),FP Rate (Taux de faux positifs),F-mesure,AUC ROC
+Model,TP Rate (Taux de vrais positifs),FP Rate (Taux de faux positifs),F-mesure,AUC ROC
 Decision Tree,0.8873,0.1228,0.8901,0.8822
 Bagging (50 arbres),0.9329,0.0839,0.9303,0.9724
-AdaBoost (50 arbres),0.9199,0.0914,0.9203,0.9696
+AdaBoost (50 arbres),0.9098,0.0901,0.9153,0.9643

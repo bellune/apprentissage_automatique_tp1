@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import functions as fs
+import matplotlib.pyplot as plt
 from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import (
@@ -8,7 +9,7 @@ from sklearn.metrics import (
 )
 
 
-def all_algorithme(train_file,test_file, result_file,result_folder="resultats/"):
+def all_algorithme(train_file,test_file, result_file,title,result_folder="resultats/"):
 
 
     # 1. Charger les fichiers CSV
@@ -27,12 +28,14 @@ def all_algorithme(train_file,test_file, result_file,result_folder="resultats/")
     # 3. Définir les modèles
     models = {
         "Decision Tree": DecisionTreeClassifier(random_state=42),
-        "Bagging (50 arbres)": BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=50, random_state=42),
-        "AdaBoost (50 arbres)": AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=1), n_estimators=50, random_state=42)
-    }
+        "Bagging (50 arbres)": BaggingClassifier(estimator=DecisionTreeClassifier(),
+                                                  n_estimators=50, random_state=42),
+        "AdaBoost (50 arbres)": AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=1),
+                                                    n_estimators=50, learning_rate=1.0, algorithm="SAMME",random_state=42) }
 
     # 4. Entraîner et évaluer chaque modèle
     results = []
+    plt.figure(figsize=(8, 6))  # Préparer une figure pour la courbe ROC
 
     for name, model in models.items():
         print(f"\nEntraînement du modèle : {name}")
@@ -55,15 +58,21 @@ def all_algorithme(train_file,test_file, result_file,result_folder="resultats/")
 
         # Stocker les résultats
         results.append({
-            "Modèle": name,
+            "Model": name,
             "TP Rate (Taux de vrais positifs)": round(tp_rate, 4),
             "FP Rate (Taux de faux positifs)": round(fp_rate, 4),
             "F-mesure": round(f1_score, 4),
             "AUC ROC": round(auc_score, 4)
         })
 
+        # Tracer la courbe ROC pour ce modèle
+        fpr, tpr, _ = roc_curve(y_test, y_prob)
+        plt.plot(fpr, tpr, label=f'{name} (AUC = {auc_score:.4f})')
+
     # 5. Convertir en DataFrame pour afficher proprement
     df_results = pd.DataFrame(results)
+
+   
 
     # 6. Afficher les résultats
     # Sauvegarde finale
@@ -75,17 +84,34 @@ def all_algorithme(train_file,test_file, result_file,result_folder="resultats/")
 
     df_results.to_csv(csv_path, index=False, encoding='utf-8')
     print(f"Résultats enregistrés : {csv_path}")
+    get_courve(title,plt)
 
 
 
-# Entrainement des donnees
-train_file = "Pretraitement/train/training_data.csv"
-test_file = "Pretraitement/test/test_data.csv"
-result_file = 'comparaison_modele.csv'
-all_algorithme(train_file,test_file,result_file)
 
-# Entrainement des donnees desequilibrees
-train_file = "Pretraitement/train/training_unbalance_data.csv"
-test_file = "Pretraitement/test/test_unbalance_data.csv"
-result_file = 'comparaison_modele_unbalance.csv'
-all_algorithme(train_file,test_file,result_file)
+def execute_algo():
+    # Entrainement des donnees
+    train_file = "Pretraitement/train/training_data.csv"
+    test_file = "Pretraitement/test/test_data.csv"
+    result_file = 'comparaison_modele.csv'
+    title = 'Comparaison des courbes ROC - Données Equilibrées'
+    all_algorithme(train_file,test_file,result_file,title)
+
+    # Entrainement des donnees desequilibrees
+    train_file = "Pretraitement/train/training_unbalance_data.csv"
+    test_file = "Pretraitement/test/test_unbalance_data.csv"
+    result_file = 'comparaison_modele_unbalance.csv'
+    title = 'Comparaison des courbes ROC - Données Déséquilibrées'
+    all_algorithme(train_file,test_file,result_file,title)
+
+
+def get_courve(title,plt):
+    # Tracer la courbe ROC finale
+    plt.plot([0, 1], [0, 1], color='gray', linestyle='--')  # Diagonale
+    plt.xlabel('Taux de Faux Positifs (FPR)')
+    plt.ylabel('Taux de Vrais Positifs (TPR)')
+    plt.title(title)
+    plt.legend()
+    plt.grid()
+    plt.show()
+

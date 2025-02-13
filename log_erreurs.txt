@@ -10,4 +10,12 @@
 [2025-02-12 16:23:02]  Rapport des lignes manquantes par fichier :
 [2025-02-12 16:23:02] - Datasets/legitimate_users_tweets.txt : 13316 lignes non chargées.
 
------------------------------------------------------------------
+-----------------------------------------------------------------[2025-02-12 18:53:59] Une erreur est survenue : module 'functions' has no attribute 'all_algorithme'
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 103, in execute_algo
+    fs.all_algorithme(train_file,test_file,result_file,title)
+    ^^^^^^^^^^^^^^^^^
+AttributeError: module 'functions' has no attribute 'all_algorithme'
+

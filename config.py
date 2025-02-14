@@ -14,6 +14,7 @@ models = {
         "Random Forest": RandomForestClassifier(n_estimators=100, max_depth=3),
         "Naives baysien":  GaussianNB() }
 
+#Données Déséquilibrées
 models_unbalance = {
         "Decision Tree": DecisionTreeClassifier(random_state=42),
         "Bagging": BaggingClassifier(estimator=DecisionTreeClassifier(),

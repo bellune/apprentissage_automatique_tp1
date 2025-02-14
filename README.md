@@ -14,3 +14,7 @@ python main.py
 **features_extraction.py** : Ce fichier contient les fonctions permettant de convertir des fichiers texte (.txt) en fichiers Excel (.csv) et d'extraire des caractéristiques à partir de ces fichiers.
 
 **fonctions.py** : Ce fichier regroupe les fonctions de calcul de certaines caractéristiques et les fichiers de log.
+
+**comparison_all_algorithms.py** : 
+
+**fonctions.py** : 

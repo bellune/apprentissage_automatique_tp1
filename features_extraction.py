@@ -7,10 +7,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 
-def count_lines_in_txt(file_path):
-    """Compte le nombre de lignes dans un fichier texte."""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return sum(1 for _ in f)
+
 
 
 def convert_txts_to_csv(txt_file_paths, classes, output_folder, output_filename, column_names, delimiter="\t"):
@@ -30,7 +27,7 @@ def convert_txts_to_csv(txt_file_paths, classes, output_folder, output_filename,
             if os.path.exists(txt_file_path):
                 try:
                     # Étape 1 : Compter le nombre de lignes dans le fichier TXT
-                    total_lines_txt = count_lines_in_txt(txt_file_path)
+                    total_lines_txt = fs.count_lines_in_txt(txt_file_path)
 
                     # Étape 2 : Charger les données / on_bad_lines="skip"
                     df = pd.read_csv(txt_file_path, sep=delimiter, header=None,quoting=csv.QUOTE_NONE)
@@ -60,6 +57,11 @@ def convert_txts_to_csv(txt_file_paths, classes, output_folder, output_filename,
         # Étape 5 : Fusionner tous les fichiers
         if all_data:
             final_df = pd.concat(all_data, ignore_index=True)
+
+            #pretraitement des donnnees 
+            final_df = pretraitement_data(final_df)
+
+            #Eecrire dans le fichier csv
             final_df.to_csv(output_csv_path, index=False, encoding="utf-8")
             print(f"Fusion réussie : {output_csv_path}")
 
@@ -80,10 +82,7 @@ def convert_txts_to_csv(txt_file_paths, classes, output_folder, output_filename,
 
 
 
-def count_lines_in_csv(file_path):
-    """Compte le nombre de lignes dans un fichier CSV."""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return sum(1 for _ in f) - 1  # -1 pour ignorer l'en-tête
+
     
 
 
@@ -102,7 +101,7 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
         print("Début du traitement des tweets...")
 
         #Etape 1 : Compter les lignes du fichier avant chargement
-        total_lines_csv = count_lines_in_csv(rawpath)
+        total_lines_csv = fs.count_lines_in_csv(rawpath)
 
         # Étape 2 : Charger le fichier CSV
         df_tweets = pd.read_csv(rawpath, dtype=str)
@@ -180,6 +179,8 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
     except Exception as e:
         fs.write_log(f"Erreur lors du traitement des tweets : {e}")
         return None
+
+
 
 
 
@@ -275,6 +276,38 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
 
 
 
+
+def pretraitement_data(df):
+   
+    try:
+
+        # 1. Suppression des doublons
+        df.drop_duplicates()
+        print(f"Doublons supprimés. Nombre de lignes après suppression : {df.shape[0]}")
+
+        classe_col = df["Classe"]  # Sauvegarde la colonne "Classe"
+        # df = df.drop_duplicates(subset=df.columns.drop("Classe"))  # Supprime les doublons sans toucher "Classe"
+       
+
+        # 2. Remplacement des valeurs manquantes par la médiane
+        for col in df.select_dtypes(include=["int64", "float64"]).columns:
+            median_value = df[col].median()
+            df[col].fillna(median_value)
+        print(" Valeurs manquantes remplacées par la médiane.")
+
+    
+        df["Classe"] = classe_col  # Restaure la colonne "Classe"
+
+        return df
+
+    except Exception as e:
+        print(f"Erreur lors du pretraitement des données : {e}")
+        return None
+    
+
+
+
+
 def prepare_and_split_data(file_path, output_folder="Pretraitement/train", output_folder_test = "Pretraitement/test", test_size=0.2, random_state=42):
     """
     Prépare et sépare les données en ensembles d'entraînement (80%) et de test (20%).
@@ -296,36 +329,23 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
         # Vérifier si la colonne de classe existe
         if "Classe" not in df.columns:
             raise ValueError("Erreur : La colonne 'Classe' est absente du fichier CSV.")
-
-        # 2. Suppression des doublons
-        df.drop_duplicates()
-        print(f"Doublons supprimés. Nombre de lignes après suppression : {df.shape[0]}")
-
-        classe_col = df["Classe"]  # Sauvegarde la colonne "Classe"
-        df = df.drop_duplicates(subset=df.columns.drop("Classe"))  # Supprime les doublons sans toucher "Classe"
-       
-
-        # 3. Remplacement des valeurs manquantes par la médiane
-        for col in df.select_dtypes(include=["int64", "float64"]).columns:
-            median_value = df[col].median()
-            df[col].fillna(median_value)
-            print(df)
-        print(" Valeurs manquantes remplacées par la médiane.")
-
         
+        # 2. Suppression des doublons et remplacement des valeurs manquantes par la mediane
+        df = pretraitement_data(df)
 
-        #  4. Normalisation des données (Z-score)
+      
+        #  3. Normalisation des données (Z-score)
+        classe_col = df["Classe"]  # Sauvegarde la colonne "Classe"
         scaler = StandardScaler()
         numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
         df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
         print("Normalisation des données terminée (Z-score).")
 
-        print(df)
+        # 4. Restaure la colonne "Classe"
+        df["Classe"] = classe_col  
 
-        df["Classe"] = classe_col  # Restaure la colonne "Classe"
 
-        # 5. Un sous-ensemble où les pollueurs représentent 5 % des utilisateurs légitimes.
-       
+         # 5. Un sous-ensemble où les pollueurs représentent 5 % des utilisateurs légitimes.
         df_dq = get_unbalance_data(df)
 
         # 6. Séparation en train (80%) et test (20%) avec stratification sur "Classe"

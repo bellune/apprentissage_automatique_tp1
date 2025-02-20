@@ -160,3 +160,13 @@ def log_result(message, log_file="log_result.txt"):
         print(f"Impossible d'écrire dans le fichier log : {e}")
 
 
+def count_lines_in_txt(file_path):
+    """Compte le nombre de lignes dans un fichier texte."""
+    with open(file_path, "r", encoding="utf-8") as f:
+        return sum(1 for _ in f)
+    
+
+def count_lines_in_csv(file_path):
+    """Compte le nombre de lignes dans un fichier CSV."""
+    with open(file_path, "r", encoding="utf-8") as f:
+        return sum(1 for _ in f) - 1  # -1 pour ignorer l'en-tête

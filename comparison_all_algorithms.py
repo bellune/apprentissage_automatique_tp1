@@ -46,8 +46,8 @@ def all_algorithme(models, train_file,test_file, result_file,title,result_folder
         # Matrice de confusion
         conf_matrix = confusion_matrix(y_test, y_pred)
 
-        print("\n Matrice de confusion :")
-        print(conf_matrix)  # Afficher la matrice
+        # print("\n Matrice de confusion :")
+        # print(conf_matrix)  # Afficher la matrice
 
         tn, fp, fn, tp = conf_matrix.ravel()
 

@@ -1,7 +1,7 @@
 Modele,Precision (Pollueurs),Rappel (Pollueurs),FP Rate (Pollueurs),F-mesure (Pollueurs),AUC ROC 
-Decision Tree,0.5464,0.5492,0.0228,0.5478,0.7657
-Bagging,0.7582,0.601,0.0096,0.6705,0.955
-AdaBoost,0.7192,0.544,0.0106,0.6195,0.9703
-Gradient Boosting,0.7929,0.5751,0.0075,0.6667,0.9724
-Random Forest,1.0,0.0674,0.0,0.1262,0.9573
-Naives baysien,0.3067,0.3575,0.0405,0.3301,0.877
+Decision Tree,0.6,0.5751,0.0192,0.5873,0.7779
+Bagging,0.7733,0.601,0.0088,0.6764,0.957
+AdaBoost,0.719,0.5699,0.0112,0.6358,0.9691
+Gradient Boosting,0.8074,0.5648,0.0067,0.6646,0.9693
+Random Forest,0.6757,0.7772,0.0187,0.7229,0.9723
+Naives baysien,0.308,0.3575,0.0402,0.3309,0.8775

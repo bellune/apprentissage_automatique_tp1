@@ -159,7 +159,7 @@ def plot_confusion_matrix(y_test, y_pred, model_name, title, save_folder="result
                 yticklabels=["Légitimes (0)", "Pollueurs (1)"])
     
     plt.xlabel("Prédictions")
-    plt.ylabel("Classes")
+    plt.ylabel("Rééls")
     plt.title(f"Matrice de Confusion - {model_name}")
 
     # Définir le chemin du fichier image

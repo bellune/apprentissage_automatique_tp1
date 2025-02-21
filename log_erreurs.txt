@@ -19,3 +19,54 @@ Traceback (most recent call last):
     ^^^^^^^^^^^^^^^^^
 AttributeError: module 'functions' has no attribute 'all_algorithme'
 
+[2025-02-20 00:47:45] Erreur lors du traitement des tweets : Cannot convert [['6301' '6301' '6301' ... '93419256' '93426370' '93442002']
+ ['5599519501' '5600313663' '5600328557' ... '6171947104' '6172856187'
+  '6174743151']
+ ['MELBOURNE ENQUIRY: Seeking a variety of acts for our end of year show. Payment is $120 per slot or $200 for 2.... http://bit.ly/4Ah3fF'
+  'THE BURLESQUE BOOTCAMP SYDNEY - Open Date tickets now available from http://bbootcampsyd.eventbrite.com/ for Jan /... http://bit.ly/rCenZ'
+  'THE BURLESQUE BOOTCAMP SYDNEY - Open Date tickets now available from http://bbootcampsyd.eventbrite.com/ for Jan /... http://bit.ly/1v5hvb'
+  ... 'exploring this thing...'
+  'learning the rap ice ice baby LOL, not very gd at rapping but my sister is lol, WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO'
+  'Clipse, B.o.B и J.Cole']
+ ['1' '1' '1' ... '0' '0' '0']
+ ['MELBOURNE ENQUIRY: Seeking a variety of acts for our end of year show. Payment is $120 per slot or $200 for 2....'
+  'THE BURLESQUE BOOTCAMP SYDNEY - Open Date tickets now available from  for Jan /...'
+  'THE BURLESQUE BOOTCAMP SYDNEY - Open Date tickets now available from  for Jan /...'
+  ... 'exploring this thing...'
+  'learning the rap ice ice baby LOL, not very gd at rapping but my sister is lol, WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO'
+  'Clipse, B.o.B и J.Cole']] to numeric
+[2025-02-20 00:56:01] Une erreur est survenue : Input X contains NaN.
+AdaBoostClassifier does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 107, in execute_algo
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 40, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1473, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/ensemble/_weight_boosting.py", line 133, in fit
+    X, y = self._validate_data(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 650, in _validate_data
+    X, y = check_X_y(X, y, **check_params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/validation.py", line 1301, in check_X_y
+    X = check_array(
+        ^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/validation.py", line 1064, in check_array
+    _assert_all_finite(
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/validation.py", line 123, in _assert_all_finite
+    _assert_all_finite_element_wise(
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/validation.py", line 172, in _assert_all_finite_element_wise
+    raise ValueError(msg_err)
+ValueError: Input X contains NaN.
+AdaBoostClassifier does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values
+
+[2025-02-20 01:02:39]  Erreur lors de la fusion des fichiers TXT en CSV : 'NoneType' object has no attribute 'to_csv'
+[2025-02-20 01:24:26] Erreur lors du traitement des tweets : 'NoneType' object is not subscriptable
+[2025-02-20 01:35:48] Erreur lors de la conversion numérique : 'NoneType' object is not subscriptable
+[2025-02-20 01:35:48] Erreur lors de la conversion de CreatedAt : 'NoneType' object is not subscriptable
+[2025-02-20 01:35:48] Erreur lors de la conversion de CreatedAt : 'NoneType' object is not subscriptable

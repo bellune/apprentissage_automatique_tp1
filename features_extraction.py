@@ -4,6 +4,8 @@ import functions as fs
 from sklearn.model_selection import train_test_split
 import csv  # Pour gérer les erreurs de formatage
 from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
+import numpy as np
 
 
 
@@ -58,8 +60,7 @@ def convert_txts_to_csv(txt_file_paths, classes, output_folder, output_filename,
         if all_data:
             final_df = pd.concat(all_data, ignore_index=True)
 
-            #pretraitement des donnnees 
-            final_df = pretraitement_data(final_df)
+           
 
             #Eecrire dans le fichier csv
             final_df.to_csv(output_csv_path, index=False, encoding="utf-8")
@@ -114,6 +115,11 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
 
         print(f" Nombre de tweets après chargement : {len(df_tweets)}")
 
+         #pretraitement des donnnees 
+          # 1. Suppression des doublons
+        df_tweets.drop_duplicates()
+        print(f"Doublons supprimés. Nombre de lignes après suppression : {df_tweets.shape[0]}")
+
         # Étape 3 : Convertir CreatedAt en datetime 
         df_tweets["CreatedAt"] = pd.to_datetime(df_tweets["CreatedAt"], errors='coerce')
         df_tweets = df_tweets.dropna(subset=["Tweet", "CreatedAt"])
@@ -135,7 +141,10 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
 
         # Fusionner avec df_tweets
         df_tweets = df_tweets.merge(df_avg_repetition, on="UserID", how="left")
-        df_tweets["repetition_moyenne_tweets"].fillna(0)  # Remplacer NaN par 0
+        # df_tweets["repetition_moyenne_tweets"].fillna(df_tweets.median(), inplace=True)  # Remplacer NaN par la mediane
+        #pretraitement des donnnees 
+       
+
 
         # Étape 6 : Calcul du temps entre tweets
         print("Calcul des temps entre tweets...")
@@ -150,6 +159,8 @@ def users_with_tweets(rawpath, raw_tw_path='Pretraitement/RawData'):
         # Étape 7 : Regrouper les moyennes par utilisateur
         cols = [f"proportion_{symbol}" for symbol in symbols] + ["repetition_moyenne_tweets", "temps_moyen_entre_tweets", "temps_max_entre_tweets"]
         proportions_grouped = df_tweets.groupby("UserID")[cols].mean().reset_index()
+
+       
 
         print("Toutes les métriques calculées et ajoutées.")
 
@@ -191,8 +202,8 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
         if not os.path.exists(processed_folder):
             os.makedirs(processed_folder)
 
-        df_users = pd.read_csv(csv_file_path, dtype=str)
-        df_tweets = pd.read_csv(tweets_csv_path, dtype=str)
+        df_users = pd.read_csv(csv_file_path)
+        df_tweets = pd.read_csv(tweets_csv_path)
 
         log_errors = []  # Liste des erreurs
 
@@ -208,12 +219,13 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
         if missing_cols:
             fs.write_log(f"Colonnes manquantes dans df_users : {missing_cols}")
 
-        
+         #pretraitement des donnnees 
+        df_users = pretraitement_data(df_users)
 
         # Conversion des colonnes numériques
         numeric_cols = ['NumberOfFollowings', 'NumberOfFollowers', 'NumberOfTweets']
         try:
-            df_users[numeric_cols] = df_users[numeric_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
+            df_users[numeric_cols] = df_users[numeric_cols].apply(pd.to_numeric, errors='coerce').astype(int)
         except Exception as e:
             fs.write_log(f"Erreur lors de la conversion numérique : {e}")
 
@@ -250,12 +262,9 @@ def process_users(csv_file_path, tweets_csv_path, processed_folder):
 
       
         df_final = df_users.merge(df_tweets, on="UserID", how="left")
-        df_final["proportion_@"] = round(df_final["proportion_@"].fillna(0),3)
-        df_final["proportion_http"] = df_final["proportion_http"].fillna(0)
-        df_final["proportion_#"] = df_final["proportion_#"].fillna(0)
-        df_final["repetition_moyenne_tweets"] = df_final["repetition_moyenne_tweets"].fillna(0)
-        df_final["temps_moyen_entre_tweets"] = df_final["temps_moyen_entre_tweets"].fillna(0)
-        df_final["temps_max_entre_tweets"] = df_final["temps_max_entre_tweets"].fillna(0)
+
+        df_final = pretraitement_data(df_final)
+
 
         df_final = df_final[['LengthOfScreenName', 'LengthOfDescriptionInUserProfile', 'DaysSinceCreation', 
                              'NumberOfFollowings', 'NumberOfFollowers', 'Following/Followers Ratio', 'tweets_by_day',
@@ -285,15 +294,21 @@ def pretraitement_data(df):
         df.drop_duplicates()
         print(f"Doublons supprimés. Nombre de lignes après suppression : {df.shape[0]}")
 
-        classe_col = df["Classe"]  # Sauvegarde la colonne "Classe"
-        # df = df.drop_duplicates(subset=df.columns.drop("Classe"))  # Supprime les doublons sans toucher "Classe"
-       
 
-        # 2. Remplacement des valeurs manquantes par la médiane
-        for col in df.select_dtypes(include=["int64", "float64"]).columns:
-            median_value = df[col].median()
-            df[col].fillna(median_value)
-        print(" Valeurs manquantes remplacées par la médiane.")
+        classe_col = df["Classe"]  # Sauvegarde la colonne "Classe"
+        # df = df.drop_duplicates(subset=df.columns.drop("Classe"))  # Supprime les doublons sans toucher "Classe
+
+        # 2. Remplacement des valeurs manquantes par la médiane avec Scikit-learn
+       # Sélectionner uniquement les colonnes numériques
+
+        num_cols = df.select_dtypes(include=["int64", "float64"]).columns
+        # print(num_cols)
+        df[num_cols] = df[num_cols].replace({" ": "", "NAN": np.nan}).apply(pd.to_numeric, errors="coerce")
+        # Création du transformateur d'imputation
+        imputer = SimpleImputer(strategy="median")
+
+        # Appliquer l'imputation uniquement sur les colonnes numériques
+        df[num_cols] = imputer.fit_transform(df[num_cols])
 
     
         df["Classe"] = classe_col  # Restaure la colonne "Classe"
@@ -331,7 +346,7 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
             raise ValueError("Erreur : La colonne 'Classe' est absente du fichier CSV.")
         
         # 2. Suppression des doublons et remplacement des valeurs manquantes par la mediane
-        df = pretraitement_data(df)
+        # df = pretraitement_data(df)
 
       
         #  3. Normalisation des données (Z-score)

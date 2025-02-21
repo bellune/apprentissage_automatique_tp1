@@ -8,7 +8,7 @@ def main():
     """Point d'entrée principal du programme."""
     try:
         print("Début de l'extraction des données...")
-        exf.extraction()   
+        # exf.extraction()   
         print("Extraction terminée avec succès !")
         print("Début d'entrainement...")
         alg.execute_algo()

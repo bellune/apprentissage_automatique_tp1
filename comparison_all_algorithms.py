@@ -4,10 +4,15 @@ import functions as fs
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.model_selection import GridSearchCV
 import config as conf
+from sklearn.tree import export_graphviz, plot_tree
+import graphviz
 from sklearn.metrics import (
     accuracy_score, classification_report, confusion_matrix, roc_auc_score, roc_curve
 )
+
+
 
 
 
@@ -28,6 +33,13 @@ def all_algorithme(models, train_file,test_file, result_file,title,result_folder
     X_test = df_test.drop(columns=["Classe"])
     y_test = df_test["Classe"]
 
+
+# Grille de paramètres à tester
+    param_grid = {
+        'max_depth': [3, 5, 10, 15, 20,25,30,35,40 ,None],  
+        'min_samples_split': [2, 5,10, 15, 20,25,30,35,40, None],  
+        'min_samples_leaf': [1, 5, 10, 15, 20,25,30,35,40, None],  
+    }
    
     # 4. Entraîner et évaluer chaque modèle
     results = []
@@ -35,10 +47,19 @@ def all_algorithme(models, train_file,test_file, result_file,title,result_folder
 
     for name, model in models.items():
         print(f"\nEntraînement du modèle : {name}")
+
+        # grid_search = GridSearchCV(model, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+        # model = grid_search
         
         # Entraînement
         model.fit(X_train, y_train)
+
+        # Afficher les meilleurs paramètres
+        # print(f"Meilleure configuration {name}:", grid_search.best_params_)
         
+        #voir comment l'arbre est construit
+        # if (name == 'Decision Tree'):
+        #   construire_arbre(model,X_train,y_train)
         # Prédiction
         y_pred = model.predict(X_test)
         y_prob = model.predict_proba(X_test)[:, 1]  # Probabilités pour l'AUC ROC
@@ -104,7 +125,7 @@ def execute_algo():
     test_file = "Pretraitement/test/test_data.csv"
     result_file = 'comparaison_modele.csv'
     title = 'Données Equilibrées'
-    all_algorithme(conf.models,train_file,test_file,result_file,title)
+    # all_algorithme(conf.models,train_file,test_file,result_file,title)
 
     # Entrainement des donnees desequilibrees
     train_file = "Pretraitement/train/training_unbalance_data.csv"
@@ -172,5 +193,8 @@ def plot_confusion_matrix(y_test, y_pred, model_name, title, save_folder="result
     print(f"Matrice de confusion sauvegardée : {file_path}")
 
 
-
+def construire_arbre(clf,X,y):
+    plt.figure(figsize=(12, 8))
+    plot_tree(clf, feature_names=X.columns, class_names=[str(cls) for cls in y.unique()], filled=True,rounded=True,fontsize=8)
+    plt.show()
 

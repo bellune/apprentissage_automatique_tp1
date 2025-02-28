@@ -70,3 +70,515 @@ AdaBoostClassifier does not accept missing values encoded as NaN natively. For s
 [2025-02-20 01:35:48] Erreur lors de la conversion numérique : 'NoneType' object is not subscriptable
 [2025-02-20 01:35:48] Erreur lors de la conversion de CreatedAt : 'NoneType' object is not subscriptable
 [2025-02-20 01:35:48] Erreur lors de la conversion de CreatedAt : 'NoneType' object is not subscriptable
+[2025-02-28 01:58:07] Une erreur est survenue : name 'X' is not defined
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 112, in execute_algo
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 46, in all_algorithme
+    construire_arbre(model)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 185, in construire_arbre
+    feature_names=X.columns,
+                ^
+NameError: name 'X' is not defined
+
+[2025-02-28 02:00:05] Une erreur est survenue : name 'X' is not defined
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 112, in execute_algo
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 46, in all_algorithme
+    construire_arbre(model)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 185, in construire_arbre
+    feature_names=X.columns,
+                ^
+NameError: name 'X' is not defined
+
+[2025-02-28 02:01:24] Une erreur est survenue : failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH
+Traceback (most recent call last):
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/backend/execute.py", line 78, in run_check
+    proc = subprocess.run(cmd, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: PosixPath('dot')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 112, in execute_algo
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 46, in all_algorithme
+    construire_arbre(model,X_train,y_train)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 192, in construire_arbre
+    graph.render("decision_tree")  # Sauvegarde en PDF
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/_tools.py", line 171, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/rendering.py", line 122, in render
+    rendered = self._render(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/_tools.py", line 171, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/backend/rendering.py", line 326, in render
+    execute.run_check(cmd,
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/backend/execute.py", line 81, in run_check
+    raise ExecutableNotFound(cmd) from e
+graphviz.backend.execute.ExecutableNotFound: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH
+
+[2025-02-28 02:04:44] Une erreur est survenue : 'NoneType' object has no attribute 'splitlines'
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 112, in execute_algo
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 46, in all_algorithme
+    construire_arbre(model,X_train,y_train)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 192, in construire_arbre
+    graph.render("decision_tree")  # Sauvegarde en PDF
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/_tools.py", line 171, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/rendering.py", line 118, in render
+    filepath = self.save(filename, directory=directory, skip_existing=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/_tools.py", line 171, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/sources.py", line 146, in save
+    return super().save(filename=filename, directory=directory,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/_tools.py", line 171, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/saving.py", line 80, in save
+    for uline in self:
+  File "/usr/local/opt/lib/python3.12/site-packages/graphviz/sources.py", line 108, in __iter__
+    lines = self._source.splitlines(keepends=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'splitlines'
+
+[2025-02-28 03:54:23] Une erreur est survenue : Invalid parameter 'criterion' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=50,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 463, in _process_worker
+    r = call_item()
+        ^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 598, in __call__
+    return [func(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 136, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 876, in _fit_and_score
+    estimator = estimator.set_params(**clone(parameters, safe=False))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 279, in set_params
+    raise ValueError(
+ValueError: Invalid parameter 'criterion' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=50,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 130, in execute_algo
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 57, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1473, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1019, in fit
+    self._run_search(evaluate_candidates)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1573, in _run_search
+    evaluate_candidates(ParameterGrid(self.param_grid))
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 965, in evaluate_candidates
+    out = parallel(
+          ^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 74, in __call__
+    return super().__call__(iterable_with_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 2007, in __call__
+    return output if self.return_generator else list(output)
+                                                ^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1650, in _get_outputs
+    yield from self._retrieve()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1754, in _retrieve
+    self._raise_error_fast()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1789, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 745, in get_result
+    return self._return_or_raise()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 763, in _return_or_raise
+    raise self._result
+ValueError: Invalid parameter 'criterion' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=50,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+
+[2025-02-28 04:15:41] Une erreur est survenue : Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 463, in _process_worker
+    r = call_item()
+        ^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 598, in __call__
+    return [func(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 136, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 876, in _fit_and_score
+    estimator = estimator.set_params(**clone(parameters, safe=False))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 279, in set_params
+    raise ValueError(
+ValueError: Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 128, in execute_algo
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 55, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1473, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1019, in fit
+    self._run_search(evaluate_candidates)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1573, in _run_search
+    evaluate_candidates(ParameterGrid(self.param_grid))
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 965, in evaluate_candidates
+    out = parallel(
+          ^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 74, in __call__
+    return super().__call__(iterable_with_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 2007, in __call__
+    return output if self.return_generator else list(output)
+                                                ^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1650, in _get_outputs
+    yield from self._retrieve()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1754, in _retrieve
+    self._raise_error_fast()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1789, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 745, in get_result
+    return self._return_or_raise()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 763, in _return_or_raise
+    raise self._result
+ValueError: Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+
+[2025-02-28 04:21:15] Une erreur est survenue : Invalid parameter 'min_samples_leaf' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 463, in _process_worker
+    r = call_item()
+        ^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 598, in __call__
+    return [func(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 136, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 876, in _fit_and_score
+    estimator = estimator.set_params(**clone(parameters, safe=False))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 279, in set_params
+    raise ValueError(
+ValueError: Invalid parameter 'min_samples_leaf' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 128, in execute_algo
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 55, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1473, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1019, in fit
+    self._run_search(evaluate_candidates)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1573, in _run_search
+    evaluate_candidates(ParameterGrid(self.param_grid))
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 965, in evaluate_candidates
+    out = parallel(
+          ^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 74, in __call__
+    return super().__call__(iterable_with_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 2007, in __call__
+    return output if self.return_generator else list(output)
+                                                ^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1650, in _get_outputs
+    yield from self._retrieve()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1754, in _retrieve
+    self._raise_error_fast()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1789, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 745, in get_result
+    return self._return_or_raise()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 763, in _return_or_raise
+    raise self._result
+ValueError: Invalid parameter 'min_samples_leaf' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+
+[2025-02-28 04:31:44] Une erreur est survenue : Invalid parameter 'min_samples_leaf' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 463, in _process_worker
+    r = call_item()
+        ^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 598, in __call__
+    return [func(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 136, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 876, in _fit_and_score
+    estimator = estimator.set_params(**clone(parameters, safe=False))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 279, in set_params
+    raise ValueError(
+ValueError: Invalid parameter 'min_samples_leaf' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 135, in execute_algo
+    all_algorithme(conf.models_unbalance, train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 55, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1473, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1019, in fit
+    self._run_search(evaluate_candidates)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1573, in _run_search
+    evaluate_candidates(ParameterGrid(self.param_grid))
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 965, in evaluate_candidates
+    out = parallel(
+          ^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 74, in __call__
+    return super().__call__(iterable_with_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 2007, in __call__
+    return output if self.return_generator else list(output)
+                                                ^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1650, in _get_outputs
+    yield from self._retrieve()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1754, in _retrieve
+    self._raise_error_fast()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1789, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 745, in get_result
+    return self._return_or_raise()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 763, in _return_or_raise
+    raise self._result
+ValueError: Invalid parameter 'min_samples_leaf' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+
+[2025-02-28 04:34:15] Une erreur est survenue : Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 463, in _process_worker
+    r = call_item()
+        ^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 598, in __call__
+    return [func(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 136, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 876, in _fit_and_score
+    estimator = estimator.set_params(**clone(parameters, safe=False))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 279, in set_params
+    raise ValueError(
+ValueError: Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 135, in execute_algo
+    all_algorithme(conf.models_unbalance, train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 55, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1473, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1019, in fit
+    self._run_search(evaluate_candidates)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1573, in _run_search
+    evaluate_candidates(ParameterGrid(self.param_grid))
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 965, in evaluate_candidates
+    out = parallel(
+          ^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 74, in __call__
+    return super().__call__(iterable_with_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 2007, in __call__
+    return output if self.return_generator else list(output)
+                                                ^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1650, in _get_outputs
+    yield from self._retrieve()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1754, in _retrieve
+    self._raise_error_fast()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1789, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 745, in get_result
+    return self._return_or_raise()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 763, in _return_or_raise
+    raise self._result
+ValueError: Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=100,
+                  random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+
+[2025-02-28 04:50:59] Une erreur est survenue : The 'class_weight' parameter of DecisionTreeClassifier must be an instance of 'dict', an instance of 'list', a str among {'balanced'} or None. Got 'balanced_subsample' instead.
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 135, in execute_algo
+    all_algorithme(conf.models_unbalance, train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 55, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1466, in wrapper
+    estimator._validate_params()
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 666, in _validate_params
+    validate_parameter_constraints(
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/_param_validation.py", line 95, in validate_parameter_constraints
+    raise InvalidParameterError(
+sklearn.utils._param_validation.InvalidParameterError: The 'class_weight' parameter of DecisionTreeClassifier must be an instance of 'dict', an instance of 'list', a str among {'balanced'} or None. Got 'balanced_subsample' instead.
+
+[2025-02-28 04:59:37] Une erreur est survenue : Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(class_weight='balanced',
+                                                   max_depth=10,
+                                                   min_samples_leaf=20),
+                  n_estimators=100, random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 463, in _process_worker
+    r = call_item()
+        ^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 598, in __call__
+    return [func(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 136, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 876, in _fit_and_score
+    estimator = estimator.set_params(**clone(parameters, safe=False))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 279, in set_params
+    raise ValueError(
+ValueError: Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(class_weight='balanced',
+                                                   max_depth=10,
+                                                   min_samples_leaf=20),
+                  n_estimators=100, random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 135, in execute_algo
+    all_algorithme(conf.models_unbalance, train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 55, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1473, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1019, in fit
+    self._run_search(evaluate_candidates)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1573, in _run_search
+    evaluate_candidates(ParameterGrid(self.param_grid))
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 965, in evaluate_candidates
+    out = parallel(
+          ^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 74, in __call__
+    return super().__call__(iterable_with_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 2007, in __call__
+    return output if self.return_generator else list(output)
+                                                ^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1650, in _get_outputs
+    yield from self._retrieve()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1754, in _retrieve
+    self._raise_error_fast()
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 1789, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 745, in get_result
+    return self._return_or_raise()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/joblib/parallel.py", line 763, in _return_or_raise
+    raise self._result
+ValueError: Invalid parameter 'max_depth' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(class_weight='balanced',
+                                                   max_depth=10,
+                                                   min_samples_leaf=20),
+                  n_estimators=100, random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
+

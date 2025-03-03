@@ -384,7 +384,7 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
 
         print(f"Fichiers enregistrés :\n - {train_file} /  {train_file_unb}  \n - {test_file} / {test_file_unb}")
 
-        split_data_Bayesien( df,  output_folder,output_folder_test, test_size=0.2, random_state=42)
+        # split_data_Bayesien( df,  output_folder,output_folder_test, test_size=0.2, random_state=42)
 
         return {"train": [train_file, train_file_unb], "test": [test_file, test_file_unb]}
 

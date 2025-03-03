@@ -18,7 +18,7 @@ from sklearn.metrics import (
 
 
 
-def all_algorithme(models, train_file,test_file, Btrain_file,Btest_file,result_file, title,result_folder="resultats/"):
+def all_algorithme(models, train_file,test_file, result_file, title,result_folder="resultats/"):
 
 
     # 1. Charger les fichiers CSV
@@ -28,8 +28,8 @@ def all_algorithme(models, train_file,test_file, Btrain_file,Btest_file,result_f
     df_test = pd.read_csv(test_file)
 
     # Bayes
-    dfB_train = pd.read_csv(Btrain_file)
-    dfB_test = pd.read_csv(Btest_file)
+    # dfB_train = pd.read_csv(Btrain_file)
+    # dfB_test = pd.read_csv(Btest_file)
     
 
     # 2. Séparer les variables X (features) et y (classe)
@@ -39,11 +39,11 @@ def all_algorithme(models, train_file,test_file, Btrain_file,Btest_file,result_f
     X_test = df_test.drop(columns=["Classe"])
     y_test = df_test["Classe"]
 
-    XB_train = dfB_train.drop(columns=["Classe"])
-    yB_train = dfB_train["Classe"]
+    # XB_train = dfB_train.drop(columns=["Classe"])
+    # yB_train = dfB_train["Classe"]
 
-    XB_test = dfB_test.drop(columns=["Classe"])
-    yB_test = dfB_test["Classe"]
+    # XB_test = dfB_test.drop(columns=["Classe"])
+    # yB_test = dfB_test["Classe"]
 
 
 
@@ -56,12 +56,12 @@ def all_algorithme(models, train_file,test_file, Btrain_file,Btest_file,result_f
         print(f"\nEntraînement du modèle : {name}")
 
         
-        if (name in 'Naives baysien'):
-            X_train = XB_train
-            y_train = yB_train
+        # if (name in 'Naives baysien'):
+        #     X_train = XB_train
+        #     y_train = yB_train
             
-            X_test = XB_test
-            y_test = yB_test
+        #     X_test = XB_test
+        #     y_test = yB_test
 
 
         # Entraînement
@@ -137,7 +137,7 @@ def execute_algo():
 
     result_file = 'comparaison_modele.csv'
     title = 'Données Equilibrées'
-    all_algorithme(conf.models,train_file,test_file,Btrain_file,Btest_file,result_file,title)
+    all_algorithme(conf.models,train_file,test_file, result_file,title)
 
     # Entrainement des donnees desequilibrees
     train_file = "Pretraitement/train/training_unbalance_data.csv"
@@ -149,7 +149,7 @@ def execute_algo():
     result_file = 'comparaison_modele_unbalance.csv'
     title = 'Données Déséquilibrées'
     
-    all_algorithme(conf.models_unbalance, train_file, test_file, Btrain_file, Btest_file,result_file,title)
+    all_algorithme(conf.models_unbalance, train_file, test_file, result_file,title)
 
 
 

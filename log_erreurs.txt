@@ -646,3 +646,11 @@ Traceback (most recent call last):
              ^^^^^
 FileNotFoundError: [Errno 2] No such file or directory: 'Pretraitement/test/test_unbalance_dBayes_data.csv'
 
+[2025-03-03 01:11:24] Une erreur est survenue : all_algorithme() missing 2 required positional arguments: 'result_file' and 'title'
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 15, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 140, in execute_algo
+    all_algorithme(conf.models,train_file,test_file, result_file,title)
+TypeError: all_algorithme() missing 2 required positional arguments: 'result_file' and 'title'
+

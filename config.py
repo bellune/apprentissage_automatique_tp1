@@ -42,7 +42,7 @@ models_unbalance = {
                                                 bootstrap=True,
                                                 random_state=42
                                                  ),
-        "Naives baysien":  GaussianNB()
-        # "Naives baysien":  MultinomialNB(alpha=0.1, fit_prior=False)
+        # "Naives baysien":  GaussianNB()
+        "Naives baysien":  MultinomialNB(alpha=0.1, fit_prior=False)
         
         }

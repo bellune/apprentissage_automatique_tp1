@@ -620,3 +620,29 @@ Traceback (most recent call last):
     raise ValueError("Negative values in data passed to %s" % whom)
 ValueError: Negative values in data passed to MultinomialNB (input X)
 
+[2025-03-03 00:08:13] Une erreur est survenue : [Errno 2] No such file or directory: 'Pretraitement/test/test_unbalance_dBayes_data.csv'
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 15, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 152, in execute_algo
+    all_algorithme(conf.models_unbalance, train_file,Btrain_file, Btest_file, test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 31, in all_algorithme
+    dfB_train = pd.read_csv(Btrain_file)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/pandas/io/common.py", line 873, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'Pretraitement/test/test_unbalance_dBayes_data.csv'
+

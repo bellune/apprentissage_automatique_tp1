@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import GridSearchCV
 import config as conf
 from sklearn.tree import export_graphviz, plot_tree
+from sklearn.preprocessing import StandardScaler, KBinsDiscretizer, MinMaxScaler
 import graphviz
 from sklearn.metrics import (
     accuracy_score, classification_report, confusion_matrix, roc_auc_score, roc_curve
@@ -17,7 +18,7 @@ from sklearn.metrics import (
 
 
 
-def all_algorithme(models, train_file,test_file, result_file,title,result_folder="resultats/"):
+def all_algorithme(models, train_file,test_file, Btrain_file,Btest_file,result_file, title,result_folder="resultats/"):
 
 
     # 1. Charger les fichiers CSV
@@ -26,6 +27,11 @@ def all_algorithme(models, train_file,test_file, result_file,title,result_folder
     df_train = pd.read_csv(train_file)
     df_test = pd.read_csv(test_file)
 
+    # Bayes
+    dfB_train = pd.read_csv(Btrain_file)
+    dfB_test = pd.read_csv(Btest_file)
+    
+
     # 2. Séparer les variables X (features) et y (classe)
     X_train = df_train.drop(columns=["Classe"])
     y_train = df_train["Classe"]
@@ -33,13 +39,14 @@ def all_algorithme(models, train_file,test_file, result_file,title,result_folder
     X_test = df_test.drop(columns=["Classe"])
     y_test = df_test["Classe"]
 
+    XB_train = dfB_train.drop(columns=["Classe"])
+    yB_train = dfB_train["Classe"]
 
-# Grille de paramètres à tester
-    param_grid = {
-        'max_depth': [3, 5, 10, 15, 20,25,30,35,40 ,None],  
-        'min_samples_split': [2, 5,10, 15, 20,25,30,35,40, None],  
-        'min_samples_leaf': [1, 5, 10, 15, 20,25,30,35,40, None],  
-    }
+    XB_test = dfB_test.drop(columns=["Classe"])
+    yB_test = dfB_test["Classe"]
+
+
+
    
     # 4. Entraîner et évaluer chaque modèle
     results = []
@@ -48,18 +55,19 @@ def all_algorithme(models, train_file,test_file, result_file,title,result_folder
     for name, model in models.items():
         print(f"\nEntraînement du modèle : {name}")
 
-        # grid_search = GridSearchCV(model, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
-        # model = grid_search
         
+        if (name in 'Naives baysien'):
+            X_train = XB_train
+            y_train = yB_train
+            
+            X_test = XB_test
+            y_test = yB_test
+
+
         # Entraînement
         model.fit(X_train, y_train)
 
-        # Afficher les meilleurs paramètres
-        # print(f"Meilleure configuration {name}:", grid_search.best_params_)
-        
-        #voir comment l'arbre est construit
-        # if (name == 'Decision Tree'):
-        #   construire_arbre(model,X_train,y_train)
+       
         # Prédiction
         y_pred = model.predict(X_test)
         y_prob = model.predict_proba(X_test)[:, 1]  # Probabilités pour l'AUC ROC
@@ -123,16 +131,25 @@ def execute_algo():
     # Entrainement des donnees
     train_file = "Pretraitement/train/training_data.csv"
     test_file = "Pretraitement/test/test_data.csv"
+
+    Btrain_file = "Pretraitement/train/training_Bayes_data.csv"
+    Btest_file = "Pretraitement/test/test_Bayes_data.csv"
+
     result_file = 'comparaison_modele.csv'
     title = 'Données Equilibrées'
-    all_algorithme(conf.models,train_file,test_file,result_file,title)
+    all_algorithme(conf.models,train_file,test_file,Btrain_file,Btest_file,result_file,title)
 
     # Entrainement des donnees desequilibrees
     train_file = "Pretraitement/train/training_unbalance_data.csv"
     test_file = "Pretraitement/test/test_unbalance_data.csv"
+    
+    Btrain_file = "Pretraitement/train/training_unbalance_Bayes_data.csv"
+    Btest_file = "Pretraitement/test/test_unbalance_Bayes_data.csv"
+
     result_file = 'comparaison_modele_unbalance.csv'
     title = 'Données Déséquilibrées'
-    all_algorithme(conf.models_unbalance, train_file,test_file,result_file,title)
+    
+    all_algorithme(conf.models_unbalance, train_file, test_file, Btrain_file, Btest_file,result_file,title)
 
 
 
@@ -197,4 +214,8 @@ def construire_arbre(clf,X,y):
     plt.figure(figsize=(12, 8))
     plot_tree(clf, feature_names=X.columns, class_names=[str(cls) for cls in y.unique()], filled=True,rounded=True,fontsize=8)
     plt.show()
+
+
+
+
 

@@ -18,7 +18,8 @@ models = {
                                                          learning_rate=0.1,
                                                            max_depth=5),
         "Random Forest": RandomForestClassifier(n_estimators=100, max_depth=5),
-        "Naives baysien":  MultinomialNB(alpha=0.1, fit_prior=False)
+        # "Naives baysien":  MultinomialNB(alpha=0.1, fit_prior=False)
+        "Naives baysien":  GaussianNB()
           }
 
 #Données Déséquilibrées
@@ -42,7 +43,6 @@ models_unbalance = {
                                                 bootstrap=True,
                                                 random_state=42
                                                  ),
-        # "Naives baysien":  GaussianNB()
-        "Naives baysien":  MultinomialNB(alpha=0.1, fit_prior=False)
+        "Naives baysien":  GaussianNB(priors=[0.3, 0.7])
         
         }

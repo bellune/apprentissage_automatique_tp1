@@ -3,7 +3,7 @@ import pandas as pd
 import functions as fs
 from sklearn.model_selection import train_test_split
 import csv  # Pour gérer les erreurs de formatage
-from sklearn.preprocessing import StandardScaler, KBinsDiscretizer
+from sklearn.preprocessing import StandardScaler, KBinsDiscretizer, MinMaxScaler
 from sklearn.impute import SimpleImputer
 import numpy as np
 
@@ -347,21 +347,14 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
         
         # 2. Suppression des doublons et remplacement des valeurs manquantes par la mediane
         # df = pretraitement_data(df)
-
-        classe_col = df["Classe"]  # Sauvegarde la colonne "Classe"
-        #  3. Normalisation des données (Z-score) StandardScaler
-      
-        # scaler = StandardScaler()
-        # numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
-        # df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
-        # print("Normalisation des données terminée (Z-score).")
-
-         #  3. Normalisation des données (Z-score) 
-         # Discrétisation en 4 bins
+        
+        classe_col = df["Classe"] 
+        # Sauvegarde la colonne "Classe"
+        #  3. Normalisation des données (Z-score) StandardScaler  
+        scaler = StandardScaler()
         numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
-        discretizer = KBinsDiscretizer(n_bins=4, encode='ordinal', strategy='quantile')
-        df[numeric_cols] = discretizer.fit_transform(df[numeric_cols])
-         
+        df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+        print("Normalisation des données terminée (Z-score).")
 
         # 4. Restaure la colonne "Classe"
         df["Classe"] = classe_col  
@@ -390,6 +383,8 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
         df_test_unb.to_csv(test_file_unb, index=False, encoding="utf-8")
 
         print(f"Fichiers enregistrés :\n - {train_file} /  {train_file_unb}  \n - {test_file} / {test_file_unb}")
+
+        split_data_Bayesien( df,  output_folder,output_folder_test, test_size=0.2, random_state=42)
 
         return {"train": [train_file, train_file_unb], "test": [test_file, test_file_unb]}
 
@@ -421,6 +416,55 @@ def get_unbalance_data(df):
     return df_sous_ensemble
 
 
+
+
+
+def split_data_Bayesien( df,  output_folder,output_folder_test, test_size=0.2, random_state=42):
+  
+    try:
+        
+        classe_col = df["Classe"] 
+        # Sauvegarde la colonne "Classe"
+        #  3. Normalisation des données (Z-score) StandardScaler  
+      # Discrétisation en 4 bins
+        numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
+        discretizer = KBinsDiscretizer(n_bins=4, encode='ordinal', strategy='quantile')
+        df[numeric_cols] = discretizer.fit_transform(df[numeric_cols])
+
+        # 4. Restaure la colonne "Classe"
+        df["Classe"] = classe_col  
+
+
+         # 5. Un sous-ensemble où les pollueurs représentent 5 % des utilisateurs légitimes.
+        df_dq = get_unbalance_data(df)
+
+        # 6. Séparation en train (80%) et test (20%) avec stratification sur "Classe"
+        df_train, df_test = train_test_split(df, test_size=test_size, stratify=df["Classe"], random_state=random_state)
+        print(f"Données séparées : {df_train.shape[0]} pour l'entraînement, {df_test.shape[0]} pour le test.")
+
+        # 7. Séparation en train (80%) et test (20%) avec stratification sur "Classe" des donnees desequilibree
+        df_train_unb, df_test_unb = train_test_split(df_dq, test_size=test_size, stratify=df_dq["Classe"], random_state=random_state)
+        print(f"Données désequilibrées séparées : {df_train_unb.shape[0]} pour l'entraînement, {df_test_unb.shape[0]} pour le test.")
+
+        # 8. Sauvegarde des fichiers
+        train_file = os.path.join(output_folder, "training_Bayes_data.csv")
+        test_file = os.path.join(output_folder_test, "test_Bayes_data.csv")
+        train_file_unb = os.path.join(output_folder, "training_unbalance_Bayes_data.csv")
+        test_file_unb = os.path.join(output_folder_test, "test_unbalance_Bayes_data.csv")
+
+        df_train.to_csv(train_file, index=False, encoding="utf-8")
+        df_test.to_csv(test_file, index=False, encoding="utf-8")
+        df_train_unb.to_csv(train_file_unb, index=False, encoding="utf-8")
+        df_test_unb.to_csv(test_file_unb, index=False, encoding="utf-8")
+
+        print(f"Fichiers Bayes enregistrés :\n - {train_file} /  {train_file_unb}  \n - {test_file} / {test_file_unb}")
+
+        return {"train Bayes": [train_file, train_file_unb], "test Bayes": [test_file, test_file_unb]}
+
+    except Exception as e:
+        print(f"Erreur lors du traitement des données : {e}")
+        return None
+    
 
 
 

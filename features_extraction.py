@@ -3,7 +3,7 @@ import pandas as pd
 import functions as fs
 from sklearn.model_selection import train_test_split
 import csv  # Pour gérer les erreurs de formatage
-from sklearn.preprocessing import StandardScaler, KBinsDiscretizer, MinMaxScaler
+from sklearn.preprocessing import StandardScaler, KBinsDiscretizer, MinMaxScaler, PowerTransformer
 from sklearn.impute import SimpleImputer
 import numpy as np
 
@@ -384,7 +384,7 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
 
         print(f"Fichiers enregistrés :\n - {train_file} /  {train_file_unb}  \n - {test_file} / {test_file_unb}")
 
-        # split_data_Bayesien( df,  output_folder,output_folder_test, test_size=0.2, random_state=42)
+        split_data_Bayesien( df,  output_folder,output_folder_test, test_size=0.2, random_state=42)
 
         return {"train": [train_file, train_file_unb], "test": [test_file, test_file_unb]}
 
@@ -425,16 +425,23 @@ def split_data_Bayesien( df,  output_folder,output_folder_test, test_size=0.2, r
         
         classe_col = df["Classe"] 
         # Sauvegarde la colonne "Classe"
-        #  3. Normalisation des données (Z-score) StandardScaler  
-      # Discrétisation en 4 bins
+        # 3. Normalisation des données (Z-score) StandardScaler  
+        # Discrétisation en 4 bins
+        # numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
+        # discretizer = KBinsDiscretizer(n_bins=4, encode='ordinal', strategy='quantile')
+        # df[numeric_cols] = discretizer.fit_transform(df[numeric_cols])
+
+        # Sélectionner les colonnes numériques
         numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
-        discretizer = KBinsDiscretizer(n_bins=4, encode='ordinal', strategy='quantile')
-        df[numeric_cols] = discretizer.fit_transform(df[numeric_cols])
+
+        # Appliquer PowerTransformer pour rendre les données plus normales
+        scaler = PowerTransformer(method='yeo-johnson')  # Fonctionne même avec des valeurs négatives
+        df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
 
         # 4. Restaure la colonne "Classe"
         df["Classe"] = classe_col  
 
-
+         
          # 5. Un sous-ensemble où les pollueurs représentent 5 % des utilisateurs légitimes.
         df_dq = get_unbalance_data(df)
 

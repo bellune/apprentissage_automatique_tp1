@@ -9,6 +9,7 @@ def main():
     try:
         print("Début de l'extraction des données...")
         # exf.extraction()   
+        exf.split_data_only()
         print("Extraction terminée avec succès !")
         print("Début d'entrainement...")
         alg.execute_algo()

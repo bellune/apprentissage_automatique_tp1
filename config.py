@@ -1,7 +1,7 @@
 from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
 
 #Donnees Equilibrees
 models = {
@@ -18,7 +18,8 @@ models = {
                                                          learning_rate=0.1,
                                                            max_depth=5),
         "Random Forest": RandomForestClassifier(n_estimators=100, max_depth=5),
-        "Naives baysien":  GaussianNB() }
+        "Naives baysien":  MultinomialNB(alpha=0.1, fit_prior=False)
+          }
 
 #Données Déséquilibrées
 models_unbalance = {
@@ -26,7 +27,7 @@ models_unbalance = {
         "Bagging": BaggingClassifier(estimator=DecisionTreeClassifier(max_depth=10, min_samples_leaf=20,class_weight="balanced"),
                                                   n_estimators=200,
                                                   random_state=42),
-        "AdaBoost": AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=10, min_samples_leaf=20,class_weight="balanced"),
+        "AdaBoost": AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=1, min_samples_leaf=3),
                                                     n_estimators=200,
                                                     learning_rate=1.0,
                                                     algorithm="SAMME",
@@ -41,4 +42,7 @@ models_unbalance = {
                                                 bootstrap=True,
                                                 random_state=42
                                                  ),
-        "Naives baysien":  GaussianNB() }
+        "Naives baysien":  GaussianNB()
+        # "Naives baysien":  MultinomialNB(alpha=0.1, fit_prior=False)
+        
+        }

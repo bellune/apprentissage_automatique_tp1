@@ -3,7 +3,7 @@ import pandas as pd
 import functions as fs
 from sklearn.model_selection import train_test_split
 import csv  # Pour gérer les erreurs de formatage
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, KBinsDiscretizer
 from sklearn.impute import SimpleImputer
 import numpy as np
 
@@ -348,13 +348,20 @@ def prepare_and_split_data(file_path, output_folder="Pretraitement/train", outpu
         # 2. Suppression des doublons et remplacement des valeurs manquantes par la mediane
         # df = pretraitement_data(df)
 
-      
-        #  3. Normalisation des données (Z-score)
         classe_col = df["Classe"]  # Sauvegarde la colonne "Classe"
-        scaler = StandardScaler()
+        #  3. Normalisation des données (Z-score) StandardScaler
+      
+        # scaler = StandardScaler()
+        # numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
+        # df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+        # print("Normalisation des données terminée (Z-score).")
+
+         #  3. Normalisation des données (Z-score) 
+         # Discrétisation en 4 bins
         numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
-        df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
-        print("Normalisation des données terminée (Z-score).")
+        discretizer = KBinsDiscretizer(n_bins=4, encode='ordinal', strategy='quantile')
+        df[numeric_cols] = discretizer.fit_transform(df[numeric_cols])
+         
 
         # 4. Restaure la colonne "Classe"
         df["Classe"] = classe_col  
@@ -455,6 +462,10 @@ def extraction():
                         data_files = prepare_and_split_data(final_data_path)
 
 
+def split_data_only():
+
+    final_data_path = "Pretraitement/FinalData/final_users_data.csv"  # Remplace par le chemin de ton fichier
+    data_files = prepare_and_split_data(final_data_path)
    
 
 

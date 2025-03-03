@@ -125,7 +125,7 @@ def execute_algo():
     test_file = "Pretraitement/test/test_data.csv"
     result_file = 'comparaison_modele.csv'
     title = 'Données Equilibrées'
-    # all_algorithme(conf.models,train_file,test_file,result_file,title)
+    all_algorithme(conf.models,train_file,test_file,result_file,title)
 
     # Entrainement des donnees desequilibrees
     train_file = "Pretraitement/train/training_unbalance_data.csv"

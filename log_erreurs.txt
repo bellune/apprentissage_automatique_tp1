@@ -582,3 +582,41 @@ ValueError: Invalid parameter 'max_depth' for estimator BaggingClassifier(estima
                                                    min_samples_leaf=20),
                   n_estimators=100, random_state=42). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].
 
+[2025-03-02 19:30:03] Une erreur est survenue : The 'max_features' parameter of BaggingClassifier must be an int in the range [1, inf) or a float in the range (0.0, 1.0]. Got 'sqrt' instead.
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 135, in execute_algo
+    all_algorithme(conf.models_unbalance, train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 55, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/validation.py", line 66, in inner_f
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1466, in wrapper
+    estimator._validate_params()
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 666, in _validate_params
+    validate_parameter_constraints(
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/_param_validation.py", line 95, in validate_parameter_constraints
+    raise InvalidParameterError(
+sklearn.utils._param_validation.InvalidParameterError: The 'max_features' parameter of BaggingClassifier must be an int in the range [1, inf) or a float in the range (0.0, 1.0]. Got 'sqrt' instead.
+
+[2025-03-02 21:17:02] Une erreur est survenue : Negative values in data passed to MultinomialNB (input X)
+Traceback (most recent call last):
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/main.py", line 14, in main
+    alg.execute_algo()
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 135, in execute_algo
+    all_algorithme(conf.models_unbalance, train_file,test_file,result_file,title)
+  File "/Users/tabithameganebellune/Documents/Tp1-Apprentissage_automatique/comparison_all_algorithms.py", line 55, in all_algorithme
+    model.fit(X_train, y_train)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/base.py", line 1473, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/naive_bayes.py", line 759, in fit
+    self._count(X, Y)
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/naive_bayes.py", line 881, in _count
+    check_non_negative(X, "MultinomialNB (input X)")
+  File "/usr/local/opt/lib/python3.12/site-packages/sklearn/utils/validation.py", line 1689, in check_non_negative
+    raise ValueError("Negative values in data passed to %s" % whom)
+ValueError: Negative values in data passed to MultinomialNB (input X)
+
